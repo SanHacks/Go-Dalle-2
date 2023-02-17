@@ -1,3 +1,6 @@
+<img width="1671" alt="Screenshot 2023-02-17 at 22 22 11" src="https://user-images.githubusercontent.com/13138647/219785578-53242585-b4e9-4625-b9e5-31e27ab6141c.png">
+
+
 About the project
 =================
 This is a night build, implementation of OpenAI's DallE API in Native **Go**.
