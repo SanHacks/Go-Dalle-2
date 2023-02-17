@@ -5,6 +5,9 @@ About the project
 =================
 This is a night build, implementation of OpenAI's DallE API in Native **Go**.
 
+Proof of concept for an image generation prompt using OpenAI's DallE API for an online store section to allow users to generate, T-shirts( as it is fine-tuned for that.)
+
+
 This project is a work in progress and is not yet ready for production.
 I am currently working on the following features:
 - [X] Image generation prompt using OpenAI's DallE API
