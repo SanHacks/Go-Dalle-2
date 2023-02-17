@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -77,31 +76,7 @@ func templateHandler(platform *template.Template) {
 		var imageOut GenerateImages
 		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
 		if getJsonValues != nil {
-
 			log.Println("Error in Unmarshalling JSON")
-		} else {
-			db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/goweb")
-			if err != nil {
-				panic(err.Error())
-			}
-			defer func(db *sql.DB) {
-				err := db.Close()
-				if err != nil {
-					//TODO:: Handle Error
-				}
-			}(db)
-
-			insert, err := db.Query("INSERT INTO GeneratedImages VALUES(?,?)", details.QueryIn, imageOut.Data[0].Url)
-			if err != nil {
-				panic(err.Error())
-			}
-			defer func(insert *sql.Rows) {
-				err := insert.Close()
-				if err != nil {
-					//TODO:: Handle Error
-				}
-			}(insert)
-
 		}
 
 		err := platform.Execute(w, struct {
