@@ -1,9 +1,12 @@
-<img width="1671" alt="Screenshot 2023-02-17 at 22 22 11" src="https://user-images.githubusercontent.com/13138647/219785578-53242585-b4e9-4625-b9e5-31e27ab6141c.png">
+## 🥹 "Maize Meal" Prompt Result
+
+<img width="1676" alt="Screenshot 2023-02-18 at 14 42 21" src="https://user-images.githubusercontent.com/13138647/219866456-c2d40d6b-cb19-476b-91d9-6521e3b86fe6.png">
+
 
 
 About the project
 =================
-This is a night build, implementation of OpenAI's DallE API in Native **Go**.
+This is a night build, implementation of OpenAI's DallE API in Native **Go**. Fine Tuned.
 
 Proof of concept for an image generation prompt using OpenAI's DallE API for an online store section to allow users to generate, T-shirts( as it is fine-tuned for that.)
 
