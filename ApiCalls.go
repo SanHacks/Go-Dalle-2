@@ -25,6 +25,9 @@ func GenerateImage(PromptIn string) string {
 		}
 		log.Println("Prompt Sent: ", PromptIn)
 
+		//TODO:: Configure Quality and Number of Images to be generated
+		// n : number of images to generate
+		// size : size of the image to generate
 		payload := strings.NewReader(`{
     "prompt": "` + PromptIn + `",
     "n": 1,
@@ -62,5 +65,5 @@ func GenerateImage(PromptIn string) string {
 
 		return string(body)
 	}
-	return ""
+	return "OK"
 }
