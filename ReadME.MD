@@ -24,3 +24,20 @@ I am currently working on the following features:
 - Run the application using  `go run .`
 - Image generation prompt and search 
 - Your image will result will be displayed in the `/platform/` page
+
+
+TODO:: NOW
+Use AI to prompt user for image to put on t shirt
+
+1. [ ] Home page
+2. [ ] Showcase
+3. [ ] Design
+4. [ ] Tutorial
+5. [ ] Sign Up to purchase
+6. [ ] Image prompt
+7. [ ] Choose Size
+8. [ ] Color
+9. [ ] Variant
+10. [ ] Position
+11. [ ] Check out
+12. [ ] Track Order
