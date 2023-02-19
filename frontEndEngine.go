@@ -5,7 +5,8 @@ import (
 )
 
 // Point To The Front End Templates
-func templates() *template.Template {
+func templates() (*template.Template, *template.Template) {
 	platform := template.Must(template.ParseFiles("frontend/index.html"))
-	return platform
+	inventory := template.Must(template.ParseFiles("frontend/inventory.html"))
+	return platform, inventory
 }

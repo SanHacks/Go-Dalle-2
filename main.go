@@ -17,13 +17,17 @@ import (
 )
 
 func main() {
-	//testUtils()
-	router := mux.NewRouter()
-	platformRouter(router)
-	//TODO:: ADD TEMPLATES HERE
-	platform := templates()
 
-	templateHandler(platform)
+	//Initiate Router
+	router := mux.NewRouter()
+
+	//Main Backend Routes
+	platformRouter(router)
+
+	//TEMPLATES
+	platform, inventory := templates()
+
+	templateHandler(platform, inventory)
 
 	http.Handle("/", router)
 	port := openPort()
@@ -32,10 +36,6 @@ func main() {
 	log.Printf("🚀🚀🚀🚀AIGEN🚀🚀🚀🚀")
 	log.Printf("Open http://localhost:%s/platform in the browser", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
-
-}
-
-func platformRouter(router *mux.Router) {
 
 }
 
@@ -52,18 +52,21 @@ func openPort() string {
 }
 
 // Front End routes
-func templateHandler(platform *template.Template) {
+func templateHandler(platform, inventory *template.Template) {
+
+	//Landing Page
 	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
 		//IF THE REQUEST IS NOT A POST
 		if r.Method != http.MethodPost {
+			//Render the Home Page
 			err := platform.Execute(w, nil)
-			//TODO:: Handle Error
 			if err != nil {
-				return
+				log.Println("Error in Rendering the Platform Page")
 			}
 			return
 		}
 
+		//Handle the POST Request
 		details := search{
 			Time:    time.Time{},
 			QueryIn: r.FormValue("search"),
@@ -80,14 +83,15 @@ func templateHandler(platform *template.Template) {
 		if getJsonValues != nil {
 			log.Println("Error in Unmarshalling JSON")
 		}
-
-		storeImageDB(imageOut.Data[0].Url, details.QueryIn)
+		//Store the Image in the Database
+		var ImageID = storeImageDB(imageOut.Data[0].Url, details.QueryIn)
 
 		err := platform.Execute(w, struct {
 			Success  bool
 			ImageURL any
 			Search   string
-		}{Success: true, ImageURL: imageOut.Data[0].Url, Search: details.QueryIn})
+			ID       int
+		}{Success: true, ImageURL: imageOut.Data[0].Url, Search: details.QueryIn, ID: ImageID})
 		if err != nil {
 			return
 		}
@@ -97,24 +101,34 @@ func templateHandler(platform *template.Template) {
 
 }
 
-func storeImageDB(Image string, Prompt string) {
+func storeImageDB(Image string, Prompt string) int {
 	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
 	if err != nil {
 		log.Println("Error in Connecting to Database")
 	} else {
 		log.Println("Connected to Database")
 		//Save Image To Local Database for future use
-		var imagePaths = saveImageLocally(Image)
+		/*var imagePaths =*/
+		saveImageLocally(Image)
 
 		prepare := "INSERT INTO generatedProducts (name, description, price, image, category, subcategory) VALUES (?, ?, ?, ?, ?, ?)"
-		_, err := db.Exec(prepare, "Test", Prompt, 0.00, imagePaths, "Test", "Test")
+		_, err := db.Exec(prepare, "Test", Prompt, 0.00, Image, "Design", "Shirts")
 		if err != nil {
 			log.Println("Error in Storing Image in Database")
 		} else {
 			log.Println("Stored Image in Database")
 		}
+		//Get Last Inserted ID
+		var id int
+		err = db.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
+		if err != nil {
+			log.Println("Error in Getting Last Insert ID")
+		} else {
+			log.Println("Last Insert ID: ", id)
+		}
+		return id
 	}
-
+	return 0
 }
 
 func saveImageLocally(image string) string {

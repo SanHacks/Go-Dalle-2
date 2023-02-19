@@ -151,7 +151,7 @@
                             <p class="card-text">Generated</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button>
+                                   <a href="/product?id={{.ID}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
                                 </div>
                                 <small class="text-muted">Now</small>
@@ -170,7 +170,7 @@
                             <p class="card-text">Generated Image</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button>
+                                    <a href="/product?id={{.ID}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Details</button> </div>
                                 <small class="text-muted">Now</small>
                             </div>
@@ -198,56 +198,72 @@
                 {{else}}
 <!--                <p></p>-->
                 {{end}}
-                <!--
-                                <div class="col">
-                                    <div class="card shadow-sm">
-                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                                        <div class="card-body">
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                                </div>
-                                                <small class="text-muted">9 mins</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="card shadow-sm">
-                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                                        <div class="card-body">
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                                </div>
-                                                <small class="text-muted">9 mins</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="card shadow-sm">
-                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                                        <div class="card-body">
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                                </div>
-                                                <small class="text-muted">9 mins</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
+
+                {{if .ProductsData}}
+                {{range .ProductsData}}
+                <div class="col">
+                    <div class="card shadow-lg">
+                        <div class="card-body">
+                            <h5 class="card-title">{{.name}}</h5>
+                            <p class="card-text">{{.description}}</p>
+                            <p class="card-text">{{.price}}</p>
+                            <img src='{{ .image}}' class="card-img-top" alt="...">
+                            <a href="/product?id={{.id}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
+
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+                {{else}}
+                <p></p>
+                {{end}}
+
+
+
+
 
             </div>
         </div>
     </div>
+
+   <div class="album py-5 bg-light">
+       <div class="container">
+           <p id="demo">Fetch a file to change this text.</p>
+       </div>
+   </div>
+
+
+
+    <script>
+
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+        getProducts();
+
+        async function getProducts() {
+
+            let myObject = await fetch("http://localhost:8095/backend/api/products", requestOptions);
+            let myText = await myObject.text();
+            let updatedString = myText.replace(/<nil>/g, '');
+            var Stuff = JSON.parse(updatedString);
+
+            var loops = "";
+            for (var i = 0; i < Stuff.length; i++) {
+                loops += "<div class='col'><div class='card shadow-lg'>" +
+                    "<div class='card-body'><h5 class='card-title'>" + Stuff[i].name + "</h5>" +
+                    "<p class='card-text'>" + Stuff[i].description + "</p>" +
+                    "<p class='card-text'>" + Stuff[i].price + "</p>" +
+                    "<img src='" + Stuff[i].image + "' class='card-img-top' alt='...'>" +
+                    "<a href='/product?id=" + Stuff[i].id + "'>" +
+                    "<button type='button' class='btn btn-lg btn-outline-success' style='background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);'>Purchase</button></a></div></div></div>";
+
+            }
+            document.getElementById("demo").innerHTML = loops;
+
+        }
+    </script><!---->
 
 </main>
 

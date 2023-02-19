@@ -14,9 +14,9 @@ func GenerateImage(PromptIn string) string {
 	url := "https://api.openai.com/v1/images/generations"
 	method := "POST"
 
-	//Check if the prompt is empty or not if it is then add a default prompt
+	//Fine Tune
 	if PromptIn == "" {
-		PromptIn = "T-Shirt synth wave"
+		PromptIn = "T-Shirt realistic"
 	} else {
 		if strings.Contains(PromptIn, "T-Shirt") || strings.Contains(PromptIn, "t-shirt") || strings.Contains(PromptIn, "shirt") || strings.Contains(PromptIn, "Shirt") {
 			PromptIn = PromptIn + " realistic"
