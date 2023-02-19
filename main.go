@@ -9,12 +9,9 @@ import (
 	_ "go/ast"
 	_ "go/types"
 	"html/template"
-	"io"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
-	"path"
 	"time"
 )
 
@@ -27,9 +24,9 @@ func main() {
 	platformRouter(router)
 
 	//TEMPLATES
-	platform, inventory, product := templates()
+	platform, inventory, product, order := templates()
 
-	templateHandler(platform, inventory, product)
+	templateHandler(platform, inventory, product, order)
 
 	http.Handle("/", router)
 	port := openPort()
@@ -54,7 +51,7 @@ func openPort() string {
 }
 
 // Front End routes
-func templateHandler(platform, inventory, product *template.Template) {
+func templateHandler(platform, inventory, product, order *template.Template) {
 
 	//Landing Page
 	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
@@ -134,72 +131,104 @@ func templateHandler(platform, inventory, product *template.Template) {
 		return
 	})
 
-}
+	http.HandleFunc("/order", func(w http.ResponseWriter, r *http.Request) {
+		id := r.FormValue("sku")
+		/*		if r.Method == http.MethodPost && id == "" {
+				//Get Values from the Form and store in the database to create an order
+				//Get Product ID from URL
+				//id := r.URL.Query().Get("id")
 
-func storeImageDB(Image string, Prompt string) int {
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
-	if err != nil {
-		log.Println("Error in Connecting to Database")
-	} else {
-		log.Println("Connected to Database")
-		//Save Image To Local Database for future use
-		/*var imagePaths =*/
-		var localImage = saveImageLocally(Image)
+				sku := r.FormValue("sku")
+				name := r.FormValue("name")
+				email := r.FormValue("email")
+				phone := r.FormValue("phone")
+				address1 := r.FormValue("address1")
+				//address2 := r.FormValue("address2")
+				city := r.FormValue("city")
+				state := r.FormValue("state")
+				zipcode := r.FormValue("zipcode")
+				country := r.FormValue("country")
+				payment := r.FormValue("payment")
 
-		prepare := "INSERT INTO generatedProducts (name, description, price, image, category, subcategory) VALUES (?, ?, ?, ?, ?, ?)"
-		_, err := db.Exec(prepare, "Test", Prompt, 0.00, localImage, "Design", "Shirts")
-		if err != nil {
-			log.Println("Error in Storing Image in Database")
-		} else {
-			log.Println("Stored Image in Database")
+				//Check if all the fields are filled
+				if sku == "" || name == "" || email == "" || phone == "" || address1 == "" || city == "" || state == "" || zipcode == "" || country == "" || payment == "" {
+					log.Println("All fields are required")
+					order.Execute(w, struct {
+						Success     bool
+						ChannelData any
+					}{Success: false, ChannelData: "All fields are required"})
+
+					//Reirect to the order Thank you page
+					http.Redirect(w, r, "/order", http.StatusSeeOther)
+					return
+				}
+
+				if r.Method == http.MethodPost {
+					//Get Values from the Form and store in the database to create an order
+					//Get Product ID from URL
+					id := r.URL.Query().Get("id")
+
+					sku := r.FormValue("sku")
+					name := r.FormValue("name")
+					email := r.FormValue("email")
+					phone := r.FormValue("phone")
+					address1 := r.FormValue("address1")
+					address2 := r.FormValue("address2")
+					city := r.FormValue("city")
+					state := r.FormValue("state")
+					zipcode := r.FormValue("zipcode")
+					country := r.FormValue("country")
+					payment := r.FormValue("payment")
+
+					//Check if all the fields are filled
+					if sku == "" || name == "" || email == "" || phone == "" || address1 == "" || city == "" || state == "" || zipcode == "" || country == "" || payment == "" {
+						log.Println("All fields are required")
+						order.Execute(w, struct {
+							Success     bool
+							ChannelData any
+						}{Success: false, ChannelData: "All fields are required"})
+						return
+					}
+
+					//Store Order in the database
+					var orderID = storeOrderDB(sku, name, email, phone, address1, address2, city, state, zipcode, country, payment)
+					log.Println("Order ID: ", orderID)
+					//Send email to customer
+					sendEmail(name, email, orderID, id)
+					//Reirect to the order Thank you page
+					http.Redirect(w, r, "/CompleteOrder?id="+orderID, http.StatusSeeOther)
+					return
+
+				}
+			}*/
+
+		//If GET Request is made to the order page
+		if r.Method == http.MethodPost {
+			db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
+			if err != nil {
+				panic(err.Error())
+			}
+
+			productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts WHERE id = ?", id)
+			//Display all the products in the database to .html page for inventory management
+			var products []GeneratedProducts
+
+			//Loop through products and get variants
+			for productsData.Next() {
+				var product GeneratedProducts
+
+				err = productsData.Scan(&product.Id, &product.Name, &product.Description, &product.Price, &product.Image, &product.Category, &product.Subcategory)
+				products = append(products, product)
+
+			}
+			log.Println("Product ID: ", id)
+			log.Println("Product Data: ", products)
+			order.Execute(w, struct {
+				Success     bool
+				ChannelData any
+			}{Success: false, ChannelData: products})
+			return
 		}
-		//Get Last Inserted ID
-		var id int
-		err = db.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
-		if err != nil {
-			log.Println("Error in Getting Last Insert ID")
-		} else {
-			log.Println("Last Insert ID: ", id)
-		}
-		return id
-	}
-	return 0
-}
 
-func saveImageLocally(imageURL string) string {
-
-	// Download the image
-	resp, err := http.Get(imageURL)
-	if err != nil {
-		fmt.Println("Error downloading image:", err)
-		return ""
-	}
-	defer resp.Body.Close()
-
-	// Generate a random 5-letter string
-	rand.Seed(time.Now().UnixNano())
-	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	b := make([]byte, 5)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	randomString := string(b)
-
-	// Create the file and write the image data to it
-	fname := path.Base(imageURL)
-	fname = "generatedProducts/AIGEN_" + randomString + ".jpg"
-	f, err := os.Create(fname)
-	if err != nil {
-		fmt.Println("Error creating file:", err)
-		return ""
-	}
-	defer f.Close()
-	_, err = io.Copy(f, resp.Body)
-	if err != nil {
-		fmt.Println("Error writing to file:", err)
-		return ""
-	}
-
-	fmt.Println("Image downloaded and saved as", fname)
-	return fname
+	})
 }

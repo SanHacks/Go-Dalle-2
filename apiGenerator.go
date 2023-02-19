@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// ProductsGenerator API Generator for products
 func ProductsGenerator(w http.ResponseWriter) any {
 
 	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
@@ -14,7 +15,7 @@ func ProductsGenerator(w http.ResponseWriter) any {
 		panic(err.Error())
 	}
 
-	productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts")
+	productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts ORDER BY id DESC")
 	//Display all the products in the database to .html page for inventory management
 	var products []GeneratedProducts
 

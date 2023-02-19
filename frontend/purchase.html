@@ -107,37 +107,74 @@
     </div>
     <div class="card-body">
         {{if .ChannelData}}
-              <!-- Display product -->
-                        <div class="card mb-lg-3">
-                            <div class="card-body">
-                                {{range .ChannelData}}
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <img src="{{.Image}}" class="img-fluid" alt="{{.Name}}">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h3>{{.Name}}</h3>
-                                        <p>{{.Description}}</p>
-                                        <p>Price: {{.Price}}</p>
-                                        <p>Quantity: Unlimted</p>
-                                        <p>Shippings To International</p>
-                                        <p>SKU: {{.Id}}</p>
-                                        <!-- Place Order Button -->
-                                        <form action="/order" method="post">
-                                            <input type="hidden" name="sku" value="{{.Id}}">
-                                            <button type="submit" class="btn btn-primary">Place Order</button>
-                                        </form>
-                                    </div>
-                                </div>
-                                {{end}}
+        <!-- Display product -->
+        <div class="card mb-lg-3">
+            <div class="card-body">
+                {{range .ChannelData}}
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{{.Image}}" class="img-fluid" alt="{{.Name}}">
+                    </div>
+                    <div class="col-md-8">
+                        <form action="/order" method="post" class="form responsive" id="orderForm" style="background: rgba(255, 255, 255, 0.5); padding: 20px; border-radius: 10px;">
+                            <input type="hidden" id="sku" name="sku" value="{{.Id}}">
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" id="name" name="name" class="form-control" required>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone:</label>
+                                <input type="tel" id="phone" name="phone" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address1">Address Line 1:</label>
+                                <input type="text" id="address1" name="address1" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address2">Address Line 2:</label>
+                                <input type="text" id="address2" name="address2" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" name="city" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">Province:</label>
+                                <input type="text" id="state" name="state" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipcode">Zipcode:</label>
+                                <input type="text" id="zipcode" name="zipcode" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country:</label>
+                                <input type="text" id="country" name="country" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment">Payment method:</label>
+                                <select id="payment" name="payment" class="form-control">
+                                    <option value="creditcard">Credit card</option>
+                                    <option value="paypal">PayPal</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Complete Order</button>
+                        </form>
 
-
-                {{else}}
-                <h1>Channel has not been synced</h1>
+                    </div>
+                </div>
                 {{end}}
-                <!--- Main Content -->
+            </div>
+        </div>
+
+
+        {{else}}
+        <h1>Channel has not been synced</h1>
+        {{end}}
+        <!--- Main Content -->
 </main>
 
 
