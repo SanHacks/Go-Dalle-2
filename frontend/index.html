@@ -11,62 +11,51 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <meta name="theme-color" content="#712cf9">
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/album/">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link href="http://localhost:8095/assets/platform.css" rel="stylesheet">
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #FFF;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        .loader::after,
+        .loader::before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #00ff04;
+            width: 6px;
+            height: 6px;
+            transform: translate(150%, 150%);
+            border-radius: 50%;
+        }
+        .loader::before {
+            left: auto;
+            top: auto;
+            right: 0;
+            bottom: 0;
+            transform: translate(-150%, -150%);
         }
 
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
             }
         }
-
-        .b-example-divider {
-            height: 3rem;
-            background-color: rgba(0, 0, 0, .1);
-            border: solid rgba(0, 0, 0, .15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-        }
-
-        .b-example-vr {
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 100vh;
-        }
-
-        .bi {
-            vertical-align: -.125em;
-            fill: currentColor;
-        }
-
-        .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-        }
-
-        .nav-scroller .nav {
-            display: flex;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
     </style>
-
-
 </head>
 <body>
 
@@ -91,7 +80,7 @@
     </div>
     <div class="navbar navbar-dark  shadow-lg fixed-top" style="background-image:linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">
         <div class="container">
-            <a href="#" class="navbar-brand d-flex align-items-center">
+            <a href="./platform" class="navbar-brand d-flex align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 <strong>AIGEN</strong>
             </a>
@@ -148,7 +137,7 @@
                         <img src='{{ .ImageURL}}' class="card-img-top" alt="...">
 
                         <div class="card-body">
-                            <p class="card-text">Generated</p>
+                            <p class="card-text"></p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                    <a href="/product?id={{.ID}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
@@ -227,9 +216,11 @@
     </div>
 
    <div class="album py-5 bg-light">
-       <div class="container">
-           <p id="demo">Fetch a file to change this text.</p>
-       </div>
+       <div class="container" class="text-center">
+           <p id="demo"><span class="loader" style="font-size: 30px; position: center !important; color: #4c9470; font-weight: bold; font-family: 'Roboto', sans-serif; text-align: center; margin: 0 auto; display: block; width: 100%;">
+           </span>
+           </p>
+
    </div>
 
 
@@ -255,9 +246,10 @@
                     "<div class='card-body'><h5 class='card-title'>" + Stuff[i].name + "</h5>" +
                     "<p class='card-text'>" + Stuff[i].description + "</p>" +
                     "<p class='card-text'>" + Stuff[i].price + "</p>" +
-                    "<img src='" + Stuff[i].image + "' class='card-img-top' alt='...'>" +
+                    "<img src='http://localhost:8095/" + Stuff[i].image + "' class='card-img-top' alt='...'>" +
                     "<a href='/product?id=" + Stuff[i].id + "'>" +
-                    "<button type='button' class='btn btn-lg btn-outline-success' style='background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);'>Purchase</button></a></div></div></div>";
+                    "<button type='button' class='btn btn-lg btn-outline-success' style='background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);'>Purchase</button></a></div></div></div>" +
+                    "<br>";
 
             }
             document.getElementById("demo").innerHTML = loops;

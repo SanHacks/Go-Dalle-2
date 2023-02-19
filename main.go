@@ -9,7 +9,9 @@ import (
 	_ "go/ast"
 	_ "go/types"
 	"html/template"
+	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path"
@@ -25,9 +27,9 @@ func main() {
 	platformRouter(router)
 
 	//TEMPLATES
-	platform, inventory := templates()
+	platform, inventory, product := templates()
 
-	templateHandler(platform, inventory)
+	templateHandler(platform, inventory, product)
 
 	http.Handle("/", router)
 	port := openPort()
@@ -52,7 +54,7 @@ func openPort() string {
 }
 
 // Front End routes
-func templateHandler(platform, inventory *template.Template) {
+func templateHandler(platform, inventory, product *template.Template) {
 
 	//Landing Page
 	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +101,39 @@ func templateHandler(platform, inventory *template.Template) {
 
 	})
 
+	//Get Product from proudct id and display in template product.html page for inventory management
+	http.HandleFunc("/product", func(w http.ResponseWriter, r *http.Request) {
+		//Get Product ID from URL
+		id := r.URL.Query().Get("id")
+
+		//Get Product Data from Database
+
+		db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
+		if err != nil {
+			panic(err.Error())
+		}
+
+		productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts WHERE id = ?", id)
+		//Display all the products in the database to .html page for inventory management
+		var products []GeneratedProducts
+
+		//Loop through products and get variants
+		for productsData.Next() {
+			var product GeneratedProducts
+
+			err = productsData.Scan(&product.Id, &product.Name, &product.Description, &product.Price, &product.Image, &product.Category, &product.Subcategory)
+			products = append(products, product)
+
+		}
+		log.Println("Product ID: ", id)
+		log.Println("Product Data: ", products)
+		product.Execute(w, struct {
+			Success     bool
+			ChannelData any
+		}{Success: false, ChannelData: products})
+		return
+	})
+
 }
 
 func storeImageDB(Image string, Prompt string) int {
@@ -109,10 +144,10 @@ func storeImageDB(Image string, Prompt string) int {
 		log.Println("Connected to Database")
 		//Save Image To Local Database for future use
 		/*var imagePaths =*/
-		saveImageLocally(Image)
+		var localImage = saveImageLocally(Image)
 
 		prepare := "INSERT INTO generatedProducts (name, description, price, image, category, subcategory) VALUES (?, ?, ?, ?, ?, ?)"
-		_, err := db.Exec(prepare, "Test", Prompt, 0.00, Image, "Design", "Shirts")
+		_, err := db.Exec(prepare, "Test", Prompt, 0.00, localImage, "Design", "Shirts")
 		if err != nil {
 			log.Println("Error in Storing Image in Database")
 		} else {
@@ -131,36 +166,40 @@ func storeImageDB(Image string, Prompt string) int {
 	return 0
 }
 
-func saveImageLocally(image string) string {
+func saveImageLocally(imageURL string) string {
 
-	r, err := http.Get(image)
-
+	// Download the image
+	resp, err := http.Get(imageURL)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error downloading image:", err)
+		return ""
 	}
+	defer resp.Body.Close()
 
-	defer r.Body.Close()
+	// Generate a random 5-letter string
+	rand.Seed(time.Now().UnixNano())
+	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]byte, 5)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	randomString := string(b)
 
-	fname := path.Base(image)
-	fname = time.Now().Format("20060102150405") + fname
-	fname = fname + ".jpg"
-	//give the image a name
-	fname = "generatedProducts/" + fname
-
+	// Create the file and write the image data to it
+	fname := path.Base(imageURL)
+	fname = "generatedProducts/AIGEN_" + randomString + ".jpg"
 	f, err := os.Create(fname)
-
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error creating file:", err)
+		return ""
 	}
-
 	defer f.Close()
-
-	_, err = f.ReadFrom(r.Body)
-
+	_, err = io.Copy(f, resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error writing to file:", err)
+		return ""
 	}
 
-	fmt.Println("image downloaded")
+	fmt.Println("Image downloaded and saved as", fname)
 	return fname
 }
