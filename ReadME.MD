@@ -28,7 +28,7 @@ I am currently working on the following features:
 
 - Run the application using  `go run .`
 - Image generation prompt and search 
-- Your image will result will be displayed in the `/platform/` page
+- Your image will result will be displayed in the `/` page
 
 
 TODO:: NOW

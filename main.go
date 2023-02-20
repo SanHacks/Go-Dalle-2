@@ -27,6 +27,7 @@ func main() {
 	platform, inventory, product, order := templates()
 
 	templateHandler(platform, inventory, product, order)
+	http.Handle(" /", router)
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)

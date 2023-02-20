@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Push products as requested from endpoint as JSON
+// ProductsHandler Push products as requested from endpoint as JSON
 func ProductsHandler(w http.ResponseWriter, _ *http.Request) {
 	_, err := fmt.Fprint(w, ProductsGenerator(w))
 
