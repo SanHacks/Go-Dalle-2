@@ -27,13 +27,11 @@ func main() {
 	platform, inventory, product, order := templates()
 
 	templateHandler(platform, inventory, product, order)
-
-	http.Handle("/", router)
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)
 	log.Printf("🚀🚀🚀🚀AIGEN🚀🚀🚀🚀")
-	log.Printf("Open http://localhost:%s/platform in the browser", port)
+	log.Printf("Open http://localhost:%s/ in the browser", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 
 }
@@ -54,7 +52,7 @@ func openPort() string {
 func templateHandler(platform, inventory, product, order *template.Template) {
 
 	//Landing Page
-	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		//IF THE REQUEST IS NOT A POST
 		if r.Method != http.MethodPost {
 			//Render the Home Page
