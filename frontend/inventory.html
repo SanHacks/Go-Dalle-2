@@ -1,0 +1,510 @@
+<!--
+  ~ Copyright (c) 2023.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.80.0">
+
+    <!-- Favicons -->
+    <!--  <link rel="apple-touch-icon" href="assets/img/favicons/apple-touch-icon.png" sizes="180x180">-->
+    <!--  <link rel="icon" href="assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">-->
+    <!--  <link rel="icon" href="assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">-->
+    <!--  <link rel="manifest" href="assets/img/favicons/manifest.json">-->
+    <!--  <link rel="mask-icon" href="assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">-->
+    <!--  <link rel="icon" href="assets/img/favicons/favicon.ico">-->
+    <meta name="theme-color" content="#712cf9">
+
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <style>
+        body {
+            font-size: .875rem;
+        }
+
+        .feather {
+            width: 16px;
+            height: 16px;
+        }
+
+        /*
+         * Sidebar
+         */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            /* rtl:raw:
+            right: 0;
+            */
+            bottom: 0;
+            /* rtl:remove */
+            left: 0;
+            z-index: 100; /* Behind the navbar */
+            padding: 48px 0 0; /* Height of navbar */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                top: 5rem;
+            }
+        }
+
+        .sidebar-sticky {
+            height: calc(100vh - 48px);
+            overflow-x: hidden;
+            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .sidebar .nav-link .feather {
+            margin-right: 4px;
+            color: #727272;
+        }
+
+        .sidebar .nav-link.active {
+            color: #2470dc;
+        }
+
+        .sidebar .nav-link:hover .feather,
+        .sidebar .nav-link.active .feather {
+            color: inherit;
+        }
+
+        .sidebar-heading {
+            font-size: .75rem;
+        }
+
+        /*
+         * Navbar
+         */
+
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            background-color: rgba(0, 0, 0, .25);
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+        }
+
+        .navbar .navbar-toggler {
+            top: .25rem;
+            right: 1rem;
+        }
+
+        .navbar .form-control {
+            padding: .75rem 1rem;
+        }
+
+        .form-control-dark {
+            color: #fff;
+            background-color: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .1);
+        }
+
+        .form-control-dark:focus {
+            border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+        }
+
+        .nav .flex-column .nav-item {
+            color: #fcb606;
+
+        }
+
+        /** Gradient Navbar **/
+
+        .navbar {
+            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
+
+            width:99.99%;
+            border-radius: 0;
+            padding-left: calc(1em + 0.25em);
+            padding-right: calc(1em + 0.25em);
+            margin-bottom: 10px;
+            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
+            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+
+            backdrop-filter: blur(5.4px);
+            -webkit-backdrop-filter: blur(5.4px);
+        }
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+        .nav-scroller .nav {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            color: rgba(255, 255, 255, .75);
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .btn {
+            /** Modern material button **/
+            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
+            border-radius: 50px;
+            border: 10px;
+            color: #ffffff;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            -ms-transition: all 0.3s ease;
+            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
+            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            backdrop-filter: blur(5.4px);
+            -webkit-backdrop-filter: blur(5.4px);
+        }
+
+        /* Edit cart border radius and outline color    */
+
+        .card {
+            border-radius: 10px;
+            border: 1px solid #000000;
+            border-color: rgba(126, 165, 127, 0.24);
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 10px;
+            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
+            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            backdrop-filter: blur(5.4px);
+            -webkit-backdrop-filter: blur(5.4px);
+        }
+
+        /* Edit Scrollbar to look like nav bar   */
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
+            border-radius: 10px;
+            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
+            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            backdrop-filter: blur(5.4px);
+            -webkit-backdrop-filter: blur(5.4px);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
+            border-radius: 10px;
+            -webkit-box-shadow: -7px 11px 25px -9px rgb(73, 174, 57);
+            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            backdrop-filter: blur(5.4px);
+            -webkit-backdrop-filter: blur(5.4px);
+        }
+
+        .btn .btn-danger {
+            background: linear-gradient(90deg, rgb(98, 28, 89), rgba(236, 106, 156, 0.2), rgba(47, 30, 107, 0.1), rgba(136, 192, 114, 0.1));
+            border-radius: 50px;
+            border: 10px;
+            color: #843030;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            -ms-transition: all 0.3s ease;
+            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
+            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
+            backdrop-filter: blur(5.4px);
+            -webkit-backdrop-filter: blur(5.4px);
+        }
+
+        .btn btn-outline-secondary{
+            --bs-btn-color:#6c757d;
+            --bs-btn-border-color:#6c757d;
+            --bs-btn-hover-color:#fff;
+            --bs-btn-hover-bg:#6c757d;
+            --bs-btn-hover-border-color:#6c757d;
+            --bs-btn-focus-shadow-rgb:108,117,125;
+            --bs-btn-active-color:#fff;
+            --bs-btn-active-bg:#6c757d;
+            --bs-btn-active-border-color:#6c757d;
+            --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color:#6c757d;--bs-btn-disabled-bg:transparent;
+            --bs-btn-disabled-border-color:#6c757d;--bs-gradient:none
+        }
+        /** Style all elements with different colors all, used in project **/
+
+        .link-secondary {
+            color: #6c757d;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-primary {
+            color: #0d6efd;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-success {
+            color: #198754;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-info {
+            color: #0dcaf0;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-warning {
+            color: #ffc107;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-danger {
+            color: #dc3545;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-light {
+            color: #f8f9fa;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-dark {
+            color: #212529;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-white {
+            color: #fff;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-black {
+            color: #000;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-body {
+            color: #212529;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-mute {
+            color: #6c757d;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+        .link-white {
+            color: #fff;
+            text-decoration: none;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+
+    </style>
+</head>
+<body>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/platform">Platform</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <form method="POST" action="/search" class="w-100">
+        <input class="form-control w-100 form-control-dark rounded-0 border-0" type="text" name="seachContext" placeholder="Search" aria-label="Search">
+    </form>
+
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" href="#">Sign out</a>
+        </div>
+    </div>
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3 sidebar-sticky">
+                <nav>
+                    <div>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/platform">
+                                    <span data-feather="home" class="align-text-bottom"></span>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/inventory"><i class="fa-solid fa-inbox"></i>
+                                    <span data-feather="file" class="align-text-bottom"></span>
+                                    Inventory
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/channels"><i class="fa-solid fa-robot"></i>
+                                    <span data-feather="shopping-cart" class="align-text-bottom"></span>
+                                    Channels
+                                </a>
+                            </li>
+                            <li class="nav-item" >
+                                <a class="nav-link" href="/multi"><i class="fa-solid fa-address-book"></i>
+                                    <span data-feather="users" class="align-text-bottom"></span>
+                                    Multi-Channel
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fa-solid fa-gauge-high"></i>
+                                    <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+                                    Reports
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa-brands fa-connectdevelop"></i> <span data-feather="layers" class="align-text-bottom"></span>
+                                    Integrations
+                                </a>
+                            </li>
+                        </ul>
+
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                            <span>Platform</span>
+                            <a class="link-secondary" href="#" aria-label="Platform">
+                                <span data-feather="plus-circle" class="align-text-bottom"></span>
+                            </a>
+                        </h6>
+                        <ul class="nav flex-column mb-2">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/jobs"><i class="fa-solid fa-calendar"></i>
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Schedule
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/notifications"><i class="fa-solid fa-bell"></i>
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Notifications
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/catalog"><i class="fa-solid fa-envelopes-bulk"></i>
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Product Catalog
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/templates"><i class="fa-brands fa-square-whatsapp"></i>
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Templates
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/product/templates"><i class="fa-solid fa-paper-plane"></i>
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Product Templates
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fa-solid fa-paper-plane"></i>
+                                    <span data-feather="file-text" class="align-text-bottom"></span>
+                                    Rules
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+    </div>
+
+
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Channels</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                    <span data-feather="calendar" class="align-text-bottom"></span>
+                    This week
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <form method="POST">
+                <input type="submit" class="btn btn-lg" value="Push" name="action" style="width: 100%;background: linear-gradient(90deg, #fcb606 0%, #2e137d 100%, rgb(46,19,125) 100%);">
+            </form>
+            <br>
+            <br>
+        </div>
+    </main>
+</div>
+</div>
+            <!--- Main Content -->
+    </main>
+</div>
+
+<footer class="text-muted py-5">
+    <div class="container">
+        <p class="float-end mb-1">
+            <a href="#">Back to top</a>
+        </p>
+        <p class="mb-1">Gundo &copy;</p></div>
+</footer>
+</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+</html>
