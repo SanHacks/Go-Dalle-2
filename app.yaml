@@ -1,6 +1,2 @@
-runtime: go119
-api_version: go1
-
-handlers:
-- url: /.*
-  script: _go_app
+- name: Azure WebApp
+  uses: Azure/webapps-deploy@v2
