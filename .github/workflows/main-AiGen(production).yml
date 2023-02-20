@@ -1,0 +1,40 @@
+name: Go App CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AZURE_WEBAPP_NAME: <app-service-name>
+  AZURE_WEBAPP_PACKAGE_PATH: './'
+  AZURE_WEBAPP_SUBSCRIPTION_ID: <subscription-id>
+  AZURE_WEBAPP_RESOURCE_GROUP: <resource-group-name>
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.16'
+
+    - name: Build
+      run: |
+        go build -o ./bin/AIGEN
+        cd ./bin
+        ls -la
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        subscription-id: ${{ env.AZURE_WEBAPP_SUBSCRIPTION_ID }}
+        resource-group: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
+        slot-name: <slot-name> # Optional
+
