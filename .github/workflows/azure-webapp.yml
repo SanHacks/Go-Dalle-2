@@ -7,8 +7,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: AiGen # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.' # Set this to the path to your web app project, defaults to the repository root
-
+  AZURE_WEBAPP_PACKAGE_PATH: /home/site/wwwroot/
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +19,7 @@ jobs:
           go-version: 1.19.x
       - name: Install dependencies
         run: go mod download
-      - name: Build Go binary
+      - name: Build Go binaries
         run: go build -o ./bin/app
       - name: Building web app
         uses: azure/appservice-build@v2
@@ -30,4 +29,3 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/bin/app
-
