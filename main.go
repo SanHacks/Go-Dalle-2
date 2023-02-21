@@ -27,7 +27,7 @@ func main() {
 	platform, inventory, product, order := templates()
 
 	templateHandler(platform, inventory, product, order)
-	http.Handle(" /", router)
+	http.Handle("/.", router)
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)
@@ -104,7 +104,7 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//Get Product Data from Database
 
-		db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
+		db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -203,7 +203,7 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//If GET Request is made to the order page
 		if r.Method == http.MethodPost {
-			db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
+			db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 			if err != nil {
 				panic(err.Error())
 			}

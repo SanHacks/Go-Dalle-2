@@ -10,7 +10,7 @@ import (
 // ProductsGenerator API Generator for products
 func ProductsGenerator(w http.ResponseWriter) any {
 
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/StorePlatform")
+	db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 	if err != nil {
 		panic(err.Error())
 	}

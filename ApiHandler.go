@@ -10,6 +10,7 @@ func platformRouter(router *mux.Router) {
 	router.HandleFunc("/backend/api/products", ProductsHandler).Methods("GET")
 	router.PathPrefix("/generatedProducts/").Handler(http.StripPrefix("/generatedProducts/", http.FileServer(http.Dir("./generatedProducts/"))))
 	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./frontend/assets/css/"))))
+	router.PathPrefix("/img/").Handler(http.StripPrefix("/img/", http.FileServer(http.Dir("./frontend/assets/img/"))))
 	router.PathPrefix("/js/").Handler(http.StripPrefix("/frontend/assets/js/", http.FileServer(http.Dir("./frontend/assets/js/"))))
 	router.PathPrefix("/images/").Handler(http.StripPrefix("/images /", http.FileServer(http.Dir("./frontend/assets/img/"))))
 	router.PathPrefix("/frontend/assets/fonts/").Handler(http.StripPrefix("/frontend/assets/fonts/", http.FileServer(http.Dir("./frontend/assets/fonts/"))))
