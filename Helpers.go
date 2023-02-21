@@ -3,81 +3,79 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"math/rand"
 	"net/http"
-	"net/smtp"
 	"os"
 	"path"
 	"time"
 )
 
-// sendEmail To Customer with Order Confirmation
-func sendEmail(name string, email string, id any, id2 string) {
-	//Set up authentication information.
-	from := "sifhufhisg@gmail.com"
-	pass := "_ihfuhfis96_"
-	to := email
-	body := `
-		<!DOCTYPE html>
-		<html>
-		<head>
-		<style>
-		* {
-		  box-sizing: border-box;
-		}
-
-		.column {
-		  float: left;
-		  width: 50%;
-		  padding: 10px;
-		  height: 300px; /* Should be removed. Only for demonstration */
-		}
-
-		.row:after {
-		  content: "";
-		  display: table;
-		  clear: both;
-		}
-		</style>
-		</head>
-		<body>
-
-		<h2>Order Confirmation</h2>
-
-		<div class="row">
-		  <div class="column" style="background-color:#aaa;">
-			<h2>Order Details</h2>
-		  </div>
-		  <div class="column" style="background-color:#bbb;">
-			<h2>Shipping Details</h2>
-			<p>Address 1: 1234 Main St</p>
-			<p>Address 2: Apt 1</p>
-			<p>City: San Francisco</p>
-			<p>State: CA</p>
-			<p>Zipcode: 94111</p>
-			<p>Country: USA</p>
-		  </div>
-		</div>
-
-		</body>
-		</html>
-		`
-	msg := "From: " + from + "\n" +
-		"To: " + to + "\n" +
-		"Subject: Order Confirmation\n\n" +
-		body
-
-	err := smtp.SendMail("smtp.gmail.com:587",
-		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
-		from, []string{to}, []byte(msg))
-
-	if err != nil {
-		log.Printf("smtp error: %s", err)
-		return
-	}
-
-}
+//// sendEmail To Customer with Order Confirmation
+//func sendEmail(name string, email string, id any, id2 string) {
+//	//Set up authentication information.
+//	from := "sifhufhisg@gmail.com"
+//	pass := "_ihfuhfis96_"
+//	to := email
+//	body := `
+//		<!DOCTYPE html>
+//		<html>
+//		<head>
+//		<style>
+//		* {
+//		  box-sizing: border-box;
+//		}
+//
+//		.column {
+//		  float: left;
+//		  width: 50%;
+//		  padding: 10px;
+//		  height: 300px; /* Should be removed. Only for demonstration */
+//		}
+//
+//		.row:after {
+//		  content: "";
+//		  display: table;
+//		  clear: both;
+//		}
+//		</style>
+//		</head>
+//		<body>
+//
+//		<h2>Order Confirmation</h2>
+//
+//		<div class="row">
+//		  <div class="column" style="background-color:#aaa;">
+//			<h2>Order Details</h2>
+//		  </div>
+//		  <div class="column" style="background-color:#bbb;">
+//			<h2>Shipping Details</h2>
+//			<p>Address 1: 1234 Main St</p>
+//			<p>Address 2: Apt 1</p>
+//			<p>City: San Francisco</p>
+//			<p>State: CA</p>
+//			<p>Zipcode: 94111</p>
+//			<p>Country: USA</p>
+//		  </div>
+//		</div>
+//
+//		</body>
+//		</html>
+//		`
+//	msg := "From: " + from + "\n" +
+//		"To: " + to + "\n" +
+//		"Subject: Order Confirmation\n\n" +
+//		body
+//
+//	err := smtp.SendMail("smtp.gmail.com:587",
+//		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
+//		from, []string{to}, []byte(msg))
+//
+//	if err != nil {
+//		log.Printf("smtp error: %s", err)
+//		return
+//	}
+//
+//}
 
 // Save Image Locally
 func saveImageLocally(imageURL string) string {
