@@ -7,7 +7,7 @@ import (
 
 // Store Order in Database Function
 func storeOrderDB(sku string, name string, email string, phone string, address1 string, address2 string, city string, state string, zipcode string, country string, payment string) string {
-	db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
+	db, err := sql.Open("mysql", "@Sifhufhi2024:ndiGundoSan@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -30,7 +30,7 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 
 // Save Image To Local Database
 func storeImageDB(Image string, Prompt string) int {
-	db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
+	db, err := sql.Open("mysql", "@Sifhufhi2024:ndiGundoSan@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 	if err != nil {
 		log.Println("Error in Connecting to Database")
 	} else {

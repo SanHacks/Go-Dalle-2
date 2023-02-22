@@ -104,7 +104,7 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//Get Product Data from Database
 
-		db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
+		db, err := sql.Open("mysql", "@Sifhufhi2024:ndiGundoSan@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -121,6 +121,7 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 			products = append(products, product)
 
 		}
+		//Display the product in the template
 		log.Println("Product ID: ", id)
 		log.Println("Product Data: ", products)
 		product.Execute(w, struct {
@@ -130,6 +131,7 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 		return
 	})
 
+	//Get Product from proudct id and display in template product.html page for inventory management
 	http.HandleFunc("/order", func(w http.ResponseWriter, r *http.Request) {
 		id := r.FormValue("sku")
 		/*		if r.Method == http.MethodPost && id == "" {
