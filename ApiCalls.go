@@ -27,7 +27,7 @@ func GenerateImage(PromptIn string) string {
 
 		payload := strings.NewReader(`{
     "prompt": "` + PromptIn + `",
-    "n": 1,
+    "n": 3,
     "size": "512x512"
   }`)
 

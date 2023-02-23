@@ -32,8 +32,6 @@ func main() {
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)
-
-	runDb()
 	log.Printf("🚀🚀🚀🚀AIGEN🚀🚀🚀🚀")
 	log.Printf("Open http://localhost:%s/ in the browser", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
@@ -55,50 +53,61 @@ func openPort() string {
 // Front End routes
 func templateHandler(platform, inventory, product, order *template.Template) {
 
-	//Landing Page
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		//IF THE REQUEST IS NOT A POST
-		if r.Method != http.MethodPost {
-			//Render the Home Page
-			err := platform.Execute(w, nil)
-			if err != nil {
-				log.Println("Error in Rendering the Platform Page")
-			}
-			return
-		}
+//Landing Page
+http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    //IF THE REQUEST IS NOT A POST
+    if r.Method != http.MethodPost {
+        //Render the Home Page
+        err := platform.Execute(w, nil)
+        if err != nil {
+            log.Println("Error in Rendering the Platform Page")
+        }
+        return
+    }
 
-		//Handle the POST Request
-		details := search{
-			Time:    time.Time{},
-			QueryIn: r.FormValue("search"),
-		}
-		// Details Collected From Request
-		_ = details
-		//Get Prompt from the Form
-		var imageURL = GenerateImage(details.QueryIn)
-		//Log entry of all the search queries
-		log.Println("Prompt typed in: ", details.QueryIn)
-		//display the image on the home page
-		var imageOut GenerateImages
-		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
-		if getJsonValues != nil {
-			log.Println("Error in Unmarshalling JSON")
-		}
-		//Store the Image in the Database
-		var ImageID = storeImageDB(imageOut.Data[0].Url, details.QueryIn)
+    //Handle the POST Request
+    details := search{
+        Time:    time.Time{},
+        QueryIn: r.FormValue("search"),
+    }
+    // Details Collected From Request
+    _ = details
+    //Get Prompt from the Form
+    var imageURL = GenerateImage(details.QueryIn)
+    //Log entry of all the search queries
+    log.Println("Prompt typed in: ", details.QueryIn)
+    //display the image on the home page
+    var imageOut GenerateImages
+    getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
+    if getJsonValues != nil {
+        log.Println("Error in Unmarshalling JSON")
+    }
 
-		err := platform.Execute(w, struct {
-			Success  bool
-			ImageURL any
-			Search   string
-			ID       int
-		}{Success: true, ImageURL: imageOut.Data[0].Url, Search: details.QueryIn, ID: ImageID})
-		if err != nil {
-			return
-		}
-		log.Println("Image URL: ", imageURL)
+    var imageUrls []string
+    for i, image := range imageOut.Data {
+        fmt.Printf("Image %d: %s\n", i+1, image.Url)
+        imageUrls = append(imageUrls, image.Url)
+        // Do something with the image URL, such as download or display the image
+    }
 
-	})
+    //Store the Images in the Database
+    var ImageIDs []int
+    for _, url := range imageUrls {
+        var ImageID = storeImageDB(url, details.QueryIn)
+        ImageIDs = append(ImageIDs, ImageID)
+    }
+
+    err := platform.Execute(w, struct {
+        Success  bool
+        ImageURL any
+        Search   string
+        IDs      []int
+    }{Success: true, ImageURL: imageUrls[0], Search: details.QueryIn, IDs: ImageIDs})
+    if err != nil {
+        return
+    }
+    log.Println("Image URLs: ", imageUrls)
+})
 
 	//Get Product from proudct id and display in template product.html page for inventory management
 	http.HandleFunc("/product", func(w http.ResponseWriter, r *http.Request) {
