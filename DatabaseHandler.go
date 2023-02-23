@@ -28,7 +28,6 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 	return orderID
 }
 
-// Save Image To Local Database
 func storeImageDB(Image string, Prompt string) int {
 	db, err := sql.Open("mysql", "@Sifhufhi2024:ndiGundoSan@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 	if err != nil {
