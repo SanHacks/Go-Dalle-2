@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 	_ "go/ast"
 	_ "go/types"
 	"html/template"
@@ -13,11 +11,13 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 )
 
 func main() {
 
-	
 	//Initiate Router
 	router := mux.NewRouter()
 
@@ -32,6 +32,7 @@ func main() {
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)
+
 	runDb()
 	log.Printf("🚀🚀🚀🚀AIGEN🚀🚀🚀🚀")
 	log.Printf("Open http://localhost:%s/ in the browser", port)
@@ -106,13 +107,16 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//Get Product Data from Database
 
-		db, err := sql.Open("mysql", "@Sifhufhi2024:ndiGundoSan@tcp(aigen.mysql.database.azure.com:3306)/aigen")
+		db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
 		if err != nil {
 			panic(err.Error())
 		}
 
 		productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts WHERE id = ?", id)
 		//Display all the products in the database to .html page for inventory management
+		if err != nil {
+			panic(err.Error())
+		}
 		var products []GeneratedProducts
 
 		//Loop through products and get variants
@@ -120,6 +124,9 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 			var product GeneratedProducts
 
 			err = productsData.Scan(&product.Id, &product.Name, &product.Description, &product.Price, &product.Image, &product.Category, &product.Subcategory)
+			if err != nil {
+				panic(err.Error())
+			}
 			products = append(products, product)
 
 		}
@@ -130,7 +137,7 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 			Success     bool
 			ChannelData any
 		}{Success: false, ChannelData: products})
-		return
+
 	})
 
 	//Get Product from proudct id and display in template product.html page for inventory management
@@ -207,13 +214,16 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//If GET Request is made to the order page
 		if r.Method == http.MethodPost {
-			db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
-			if err != nil {
-				panic(err.Error())
+			db, fail := dbPass()
+			if fail != nil {
+				panic(fail.Error())
 			}
 
 			productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts WHERE id = ?", id)
 			//Display all the products in the database to .html page for inventory management
+			if err != nil {
+				log.Panic(err.Error())
+			}
 			var products []GeneratedProducts
 
 			//Loop through products and get variants

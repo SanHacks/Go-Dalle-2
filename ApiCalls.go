@@ -49,7 +49,7 @@ func GenerateImage(PromptIn string) string {
 		defer func(Body io.ReadCloser) {
 			err := Body.Close()
 			if err != nil {
-
+		panic(err)
 			}
 		}(res.Body)
 

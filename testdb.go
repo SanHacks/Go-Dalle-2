@@ -1,12 +1,13 @@
 package main
 
 import (
-    "database/sql"
-    "fmt"
-    _ "github.com/go-sql-driver/mysql"
+	"database/sql"
+	"fmt"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func runDb() {
+func runDb() (*sql.DB) {
     // Set up database connection string
     dbUser := "ndiGundoSan"
     dbPass := "@Sifhufhi2024"
@@ -20,26 +21,41 @@ func runDb() {
     if err != nil {
         panic(err.Error())
     }
-    defer db.Close()
+	// Test connection
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}else{
+		fmt.Println("Connected to database")
 
-    // Execute SELECT statement
-    rows, err := db.Query("SELECT * FROM generatedProducts")
-    if err != nil {
-        panic(err.Error())
-    }
-    defer rows.Close()
-
-    // Print results
-    for rows.Next() {
-        var id int
-        var name string
-        var price float64
-        if err := rows.Scan(&id, &name, &price); err != nil {
+        //Query 
+        rows, err := db.Query("SELECT * FROM generatedProducts")
+        if err != nil {
             panic(err.Error())
         }
-        fmt.Printf("Product %d: %s ($%.2f)\n", id, name, price)
-    }
-    if err := rows.Err(); err != nil {
-        panic(err.Error())
-    }
+        defer rows.Close()
+
+        //Loop through rows
+        for rows.Next() {
+            var id int
+            var name string
+            var description string
+
+            err = rows.Scan(&id, &name, &description)
+            if err != nil {
+                panic(err.Error())
+            }
+            fmt.Println(id, name, description)
+        }
+
+        //Get error
+        err = rows.Err()
+        if err != nil {
+            panic(err.Error())
+        }
+
+
+	}
+
+	return db
 }
