@@ -43,7 +43,7 @@ func openPort() string {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8095"
+		port = "8096"
 		log.Printf("Enojy! %s", port)
 	}
 
@@ -99,10 +99,10 @@ http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
     err := platform.Execute(w, struct {
         Success  bool
-        ImageURL any
+        ImageURL []string
         Search   string
         IDs      []int
-    }{Success: true, ImageURL: imageUrls[0], Search: details.QueryIn, IDs: ImageIDs})
+    }{Success: true, ImageURL: imageUrls, Search: details.QueryIn, IDs: ImageIDs})
     if err != nil {
         return
     }
