@@ -187,9 +187,7 @@
             };
 
             let url = "https://aigen.azurewebsites.net";
-            if (window.location.hostname === "localhost") {
-                url = "http://localhost:8095";
-            }
+          
 
             let myObject = await fetch(url + "/backend/api/products", requestOptions);
             let myText = await myObject.text();

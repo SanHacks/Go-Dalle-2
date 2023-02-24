@@ -86,7 +86,7 @@ http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
     for i, image := range imageOut.Data {
         fmt.Printf("Image %d: %s\n", i+1, image.Url)
         imageUrls = append(imageUrls, image.Url)
-        // Do something with the image URL, such as download or display the image
+		
     }
 
     //Store the Images in the Database
