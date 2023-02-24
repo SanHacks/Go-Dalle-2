@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	_ "go/ast"
@@ -43,7 +42,7 @@ func openPort() string {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8096"
+		port = "8095"
 		log.Printf("Enojy! %s", port)
 	}
 
@@ -103,6 +102,7 @@ http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         Search   string
         IDs      []int
     }{Success: true, ImageURL: imageUrls, Search: details.QueryIn, IDs: ImageIDs})
+	
     if err != nil {
         return
     }
@@ -116,7 +116,7 @@ http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		//Get Product Data from Database
 
-		db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
+		db, err := dbPass()
 		if err != nil {
 			panic(err.Error())
 		}

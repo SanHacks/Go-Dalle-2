@@ -72,7 +72,7 @@ func dbPass() (*sql.DB, error) {
 	dbHost := "aigen.mysql.database.azure.com"
 	dbPort := "3306"
 	dbName := "aigen"
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=true", dbUser, dbPass, dbHost, dbPort, dbName)
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=false", dbUser, dbPass, dbHost, dbPort, dbName)
 
 	db, err := sql.Open("mysql", dbURI)
 	return db, err
