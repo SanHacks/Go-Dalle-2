@@ -18,9 +18,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="http://localhost:8095/assets/platform.css" rel="stylesheet">
     <!--favicon-->
-    <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:8095/img/icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:8095/img/icon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:8095/img/icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://aigen.azurewebsites.net/img/icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="http://aigen.azurewebsites.net/img/icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="http://aigen.azurewebsites.net/img/icon.png">
 
     <style>
         .loader {
@@ -137,18 +137,19 @@
 
     <div class="album py-5 bg-light">
         <div class="container">
-
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {{if .ImageURL}}
+                {{range .ImageURL}}
+          
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img src='{{ .ImageURL}}' class="card-img-top" alt="...">
-
+                        <img src="{{.}}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <p class="card-text"></p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                   <a href="/product?id={{.ID}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
+                              
+
+                                    <a href="/product?id={{.}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
                                 </div>
                                 <small class="text-muted">Now</small>
@@ -156,72 +157,10 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col">
-                    <div class="card shadow-sm">
-
-                        <img src='{{ .ImageURL}}' class="card-img-top" alt="...">
-                        <!--                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>-->
-                        <div class="card-body">
-
-                            <p class="card-text"></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/product?id={{.ID}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Details</button> </div>
-                                <small class="text-muted">Now</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img src='{{ .ImageURL}}' class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <p class="card-text"></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Details</button> </div>
-                                <small class="text-muted">Now</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{else}}
-<!--                <p></p>-->
                 {{end}}
-
-                {{if .ProductsData}}
-                {{range .ProductsData}}
-                <div class="col">
-                    <div class="card shadow-lg">
-                        <div class="card-body">
-                            <h5 class="card-title">{{.name}}</h5>
-                            <p class="card-text">{{.description}}</p>
-                            <p class="card-text">{{.price}}</p>
-                            <img src='{{ .image}}' class="card-img-top" alt="...">
-                            <a href="/product?id={{.id}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
-
-                        </div>
-                    </div>
-                </div>
-                {{end}}
-                {{else}}
-                <p></p>
-                {{end}}
-
-
-
-
-
             </div>
         </div>
-    </div>
+    </div>    
 
    <div class="album py-5 bg-light">
        <div class="container" class="text-center">

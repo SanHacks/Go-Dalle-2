@@ -2,14 +2,16 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
 // Store Order in Database Function
 func storeOrderDB(sku string, name string, email string, phone string, address1 string, address2 string, city string, state string, zipcode string, country string, payment string) string {
-	db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
-	if err != nil {
-		panic(err.Error())
+	db, fail := dbPass()
+
+	if fail != nil {
+		panic(fail.Error())
 	}
 	StoreOrder, _ := db.Query("INSERT INTO orders (sku, name, email, phone, address1, address2, city, state, zipcode, country, payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", sku, name, email, phone, address1, address2, city, state, zipcode, country, payment)
 	if StoreOrder != nil {
@@ -19,8 +21,8 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 	}
 	//Get ID of Order that was just created
 	var orderID string
-	err = db.QueryRow("SELECT id FROM orders ORDER BY id DESC LIMIT 1").Scan(&orderID)
-	if err != nil {
+	connector := db.QueryRow("SELECT id FROM orders ORDER BY id DESC LIMIT 1").Scan(&orderID)
+	if connector != nil {
 		log.Println("Error in Getting Last Order ID")
 	} else {
 		log.Println("Got Last Order ID")
@@ -28,11 +30,15 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 	return orderID
 }
 
-// Save Image To Local Database
 func storeImageDB(Image string, Prompt string) int {
-	db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
-	if err != nil {
+
+   // Set up database connection string
+    // Connect to database
+    db, err := dbPass()
+
+    if err != nil {
 		log.Println("Error in Connecting to Database")
+        panic(err.Error())
 	} else {
 		log.Println("Connected to Database")
 		//Save Image To Local Database for future use
@@ -48,7 +54,9 @@ func storeImageDB(Image string, Prompt string) int {
 		}
 		//Get Last Inserted ID
 		var id int
+
 		err = db.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
+		
 		if err != nil {
 			log.Println("Error in Getting Last Insert ID")
 		} else {
@@ -56,5 +64,16 @@ func storeImageDB(Image string, Prompt string) int {
 		}
 		return id
 	}
-	return 0
+}
+
+func dbPass() (*sql.DB, error) {
+	dbUser := "ndiGundoSan"
+	dbPass := "@Sifhufhi2024"
+	dbHost := "aigen.mysql.database.azure.com"
+	dbPort := "3306"
+	dbName := "aigen"
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=false", dbUser, dbPass, dbHost, dbPort, dbName)
+
+	db, err := sql.Open("mysql", dbURI)
+	return db, err
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,12 +9,16 @@ import (
 // ProductsGenerator API Generator for products
 func ProductsGenerator(w http.ResponseWriter) any {
 
-	db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
-	if err != nil {
-		panic(err.Error())
+	db, fail := dbPass()
+
+	if fail != nil {
+		panic(fail.Error())
 	}
 
 	productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts ORDER BY id DESC")
+	if err != nil {
+		panic(err.Error())
+	}
 	//Display all the products in the database to .html page for inventory management
 	var products []GeneratedProducts
 
@@ -25,6 +28,9 @@ func ProductsGenerator(w http.ResponseWriter) any {
 
 		err = productsData.Scan(&product.Id, &product.Name, &product.Description, &product.Price, &product.Image, &product.Category, &product.Subcategory)
 		products = append(products, product)
+		if err != nil {
+			panic(err.Error())
+		}
 
 	}
 	//add headers to the response

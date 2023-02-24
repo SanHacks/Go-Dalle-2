@@ -1,11 +1,8 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 	_ "go/ast"
 	_ "go/types"
 	"html/template"
@@ -13,6 +10,9 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -52,50 +52,62 @@ func openPort() string {
 // Front End routes
 func templateHandler(platform, inventory, product, order *template.Template) {
 
-	//Landing Page
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		//IF THE REQUEST IS NOT A POST
-		if r.Method != http.MethodPost {
-			//Render the Home Page
-			err := platform.Execute(w, nil)
-			if err != nil {
-				log.Println("Error in Rendering the Platform Page")
-			}
-			return
-		}
+//Landing Page
+http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    //IF THE REQUEST IS NOT A POST
+    if r.Method != http.MethodPost {
+        //Render the Home Page
+        err := platform.Execute(w, nil)
+        if err != nil {
+            log.Println("Error in Rendering the Platform Page")
+        }
+        return
+    }
 
-		//Handle the POST Request
-		details := search{
-			Time:    time.Time{},
-			QueryIn: r.FormValue("search"),
-		}
-		// Details Collected From Request
-		_ = details
-		//Get Prompt from the Form
-		var imageURL = GenerateImage(details.QueryIn)
-		//Log entry of all the search queries
-		log.Println("Prompt typed in: ", details.QueryIn)
-		//display the image on the home page
-		var imageOut GenerateImages
-		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
-		if getJsonValues != nil {
-			log.Println("Error in Unmarshalling JSON")
-		}
-		//Store the Image in the Database
-		var ImageID = storeImageDB(imageOut.Data[0].Url, details.QueryIn)
+    //Handle the POST Request
+    details := search{
+        Time:    time.Time{},
+        QueryIn: r.FormValue("search"),
+    }
+    // Details Collected From Request
+    _ = details
+    //Get Prompt from the Form
+    var imageURL = GenerateImage(details.QueryIn)
+    //Log entry of all the search queries
+    log.Println("Prompt typed in: ", details.QueryIn)
+    //display the image on the home page
+    var imageOut GenerateImages
+    getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
+    if getJsonValues != nil {
+        log.Println("Error in Unmarshalling JSON")
+    }
 
-		err := platform.Execute(w, struct {
-			Success  bool
-			ImageURL any
-			Search   string
-			ID       int
-		}{Success: true, ImageURL: imageOut.Data[0].Url, Search: details.QueryIn, ID: ImageID})
-		if err != nil {
-			return
-		}
-		log.Println("Image URL: ", imageURL)
+    var imageUrls []string
+    for i, image := range imageOut.Data {
+        fmt.Printf("Image %d: %s\n", i+1, image.Url)
+        imageUrls = append(imageUrls, image.Url)
+        // Do something with the image URL, such as download or display the image
+    }
 
-	})
+    //Store the Images in the Database
+    var ImageIDs []int
+    for _, url := range imageUrls {
+        var ImageID = storeImageDB(url, details.QueryIn)
+        ImageIDs = append(ImageIDs, ImageID)
+    }
+
+    err := platform.Execute(w, struct {
+        Success  bool
+        ImageURL []string
+        Search   string
+        IDs      []int
+    }{Success: true, ImageURL: imageUrls, Search: details.QueryIn, IDs: ImageIDs})
+	
+    if err != nil {
+        return
+    }
+    log.Println("Image URLs: ", imageUrls)
+})
 
 	//Get Product from proudct id and display in template product.html page for inventory management
 	http.HandleFunc("/product", func(w http.ResponseWriter, r *http.Request) {
@@ -104,13 +116,16 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//Get Product Data from Database
 
-		db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
+		db, err := dbPass()
 		if err != nil {
 			panic(err.Error())
 		}
 
 		productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts WHERE id = ?", id)
 		//Display all the products in the database to .html page for inventory management
+		if err != nil {
+			panic(err.Error())
+		}
 		var products []GeneratedProducts
 
 		//Loop through products and get variants
@@ -118,18 +133,23 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 			var product GeneratedProducts
 
 			err = productsData.Scan(&product.Id, &product.Name, &product.Description, &product.Price, &product.Image, &product.Category, &product.Subcategory)
+			if err != nil {
+				panic(err.Error())
+			}
 			products = append(products, product)
 
 		}
+		//Display the product in the template
 		log.Println("Product ID: ", id)
 		log.Println("Product Data: ", products)
 		product.Execute(w, struct {
 			Success     bool
 			ChannelData any
 		}{Success: false, ChannelData: products})
-		return
+
 	})
 
+	//Get Product from proudct id and display in template product.html page for inventory management
 	http.HandleFunc("/order", func(w http.ResponseWriter, r *http.Request) {
 		id := r.FormValue("sku")
 		/*		if r.Method == http.MethodPost && id == "" {
@@ -203,13 +223,16 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 
 		//If GET Request is made to the order page
 		if r.Method == http.MethodPost {
-			db, err := sql.Open("mysql", "ndiGundoSan:@Sifhufhi2024@tcp(aigen.mysql.database.azure.com:3306)/aigen")
-			if err != nil {
-				panic(err.Error())
+			db, fail := dbPass()
+			if fail != nil {
+				panic(fail.Error())
 			}
 
 			productsData, err := db.Query("SELECT id, name, description, price, image, category, subcategory FROM generatedProducts WHERE id = ?", id)
 			//Display all the products in the database to .html page for inventory management
+			if err != nil {
+				log.Panic(err.Error())
+			}
 			var products []GeneratedProducts
 
 			//Loop through products and get variants

@@ -42,7 +42,6 @@ Use AI to prompt user for image to put on t shirt
 6. [ ] Image prompt
 7. [ ] Choose Size
 8. [ ] Color
-9. [ ] Variant
-10. [ ] Position
-11. [ ] Check out
-12. [ ] Track Order
+9. [ ] Position
+10. [ ] Check out
+11. [ ] Track Order
