@@ -1,5 +1,5 @@
 package main
 
 const (
-	OpenAIkey = "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"
+	OpenAIkey = "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"
 )
