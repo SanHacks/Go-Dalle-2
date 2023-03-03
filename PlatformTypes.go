@@ -7,7 +7,7 @@ type search struct {
 	QueryIn string
 }
 
-// Gen
+// GenerateImages Gen
 type GenerateImages struct {
 	Created int `json:"created"`
 	Data    []struct {

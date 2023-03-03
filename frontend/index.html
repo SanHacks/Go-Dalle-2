@@ -119,7 +119,6 @@
             </div>
         </div>
     </section>
-    <!--- container with big quoted prompt fro Search --->
     {{if .Search}}
     <div class="container">
         <div class="row">
@@ -147,9 +146,7 @@
                             <p class="card-text"></p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                              
-
-                                    <a href="/product?id={{.}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
+                                    <a href="/product?id={{.ID}}"><button type="button" class="btn btn-lg btn-outline-success" style="background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">Purchase</button></a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
                                 </div>
                                 <small class="text-muted">Now</small>
@@ -186,12 +183,8 @@
                 redirect: 'follow'
             };
 
-            let url = "https://aigen.azurewebsites.net";
-            if (window.location.hostname === "localhost") {
-                url = "http://localhost:8095";
-            }
 
-            let myObject = await fetch(url + "/backend/api/products", requestOptions);
+            let myObject = await fetch("https://aigen.azurewebsites.net/backend/api/products", requestOptions);
             let myText = await myObject.text();
             let updatedString = myText.replace(/<nil>/g, '');
             var Stuff = JSON.parse(updatedString);

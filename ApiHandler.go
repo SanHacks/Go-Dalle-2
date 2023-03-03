@@ -7,7 +7,6 @@ import (
 
 func platformRouter(router *mux.Router) {
 	//Map the routes to the handlers in the backend api handler
-	router.HandleFunc("/backend/api/products", ProductsHandler).Methods("GET")
 	router.PathPrefix("/generatedProducts/").Handler(http.StripPrefix("/generatedProducts/", http.FileServer(http.Dir("./generatedProducts/"))))
 	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./frontend/assets/css/"))))
 	router.PathPrefix("/img/").Handler(http.StripPrefix("/img/", http.FileServer(http.Dir("./frontend/assets/img/"))))

@@ -23,11 +23,12 @@ func main() {
 	//Main Backend Routes
 	platformRouter(router)
 
-	//TEMPLATES
+	//TEMPLATES HANDLER
 	platform, inventory, product, order := templates()
 
 	templateHandler(platform, inventory, product, order)
 	http.Handle("/.", router)
+
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)
@@ -42,7 +43,7 @@ func openPort() string {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8095"
+		port = "8080"
 		log.Printf("Enojy! %s", port)
 	}
 
@@ -52,69 +53,67 @@ func openPort() string {
 // Front End routes
 func templateHandler(platform, inventory, product, order *template.Template) {
 
-//Landing Page
-http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-    //IF THE REQUEST IS NOT A POST
-    if r.Method != http.MethodPost {
-        //Render the Home Page
-        err := platform.Execute(w, nil)
-        if err != nil {
-            log.Println("Error in Rendering the Platform Page")
-        }
-        return
-    }
+	//Landing Page
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		//IF THE REQUEST IS NOT A POST
+		if r.Method != http.MethodPost {
+			//Render the Home Page
+			err := platform.Execute(w, nil)
+			if err != nil {
+				log.Println("Error in Rendering the Platform Page")
+			}
+			return
+		}
 
-    //Handle the POST Request
-    details := search{
-        Time:    time.Time{},
-        QueryIn: r.FormValue("search"),
-    }
-    // Details Collected From Request
-    _ = details
-    //Get Prompt from the Form
-    var imageURL = GenerateImage(details.QueryIn)
-    //Log entry of all the search queries
-    log.Println("Prompt typed in: ", details.QueryIn)
-    //display the image on the home page
-    var imageOut GenerateImages
-    getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
-    if getJsonValues != nil {
-        log.Println("Error in Unmarshalling JSON")
-    }
+		//Handle the POST Request
+		details := search{
+			Time:    time.Time{},
+			QueryIn: r.FormValue("search"),
+		}
+		// Details Collected From Request
+		_ = details
+		//Get Prompt from the Form
+		var imageURL = GenerateImage(details.QueryIn)
+		//Log entry of all the search queries
+		log.Println("Prompt typed in: ", details.QueryIn)
+		//display the image on the home page
+		var imageOut GenerateImages
+		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
+		if getJsonValues != nil {
+			log.Println("Error in Unmarshalling JSON")
+		}
 
-    var imageUrls []string
-    for i, image := range imageOut.Data {
-        fmt.Printf("Image %d: %s\n", i+1, image.Url)
-        imageUrls = append(imageUrls, image.Url)
-        // Do something with the image URL, such as download or display the image
-    }
+		var imageUrls []string
+		for i, image := range imageOut.Data {
+			fmt.Printf("Image %d: %s\n", i+1, image.Url)
+			imageUrls = append(imageUrls, image.Url)
+			// Do something with the image URL, such as download or display the image
+		}
 
-    //Store the Images in the Database
-    var ImageIDs []int
-    for _, url := range imageUrls {
-        var ImageID = storeImageDB(url, details.QueryIn)
-        ImageIDs = append(ImageIDs, ImageID)
-    }
+		//Store the Images in the Database
+		var ImageIDs []int
+		for _, url := range imageUrls {
+			var ImageID = storeImageDB(url, details.QueryIn)
+			ImageIDs = append(ImageIDs, ImageID)
+		}
 
-    err := platform.Execute(w, struct {
-        Success  bool
-        ImageURL []string
-        Search   string
-        IDs      []int
-    }{Success: true, ImageURL: imageUrls, Search: details.QueryIn, IDs: ImageIDs})
-	
-    if err != nil {
-        return
-    }
-    log.Println("Image URLs: ", imageUrls)
-})
+		err := platform.Execute(w, struct {
+			Success  bool
+			ImageURL []string
+			Search   string
+			IDs      []int
+		}{Success: true, ImageURL: imageUrls, Search: details.QueryIn, IDs: ImageIDs})
 
-	//Get Product from proudct id and display in template product.html page for inventory management
+		if err != nil {
+			return
+		}
+		log.Println("Image URLs: ", imageUrls)
+	})
+
+	//Get Product from product id and display in template product.html page for inventory management
 	http.HandleFunc("/product", func(w http.ResponseWriter, r *http.Request) {
 		//Get Product ID from URL
 		id := r.URL.Query().Get("id")
-
-		//Get Product Data from Database
 
 		db, err := dbPass()
 		if err != nil {
@@ -149,7 +148,7 @@ http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 	})
 
-	//Get Product from proudct id and display in template product.html page for inventory management
+	//Get Product from product id and display in template product.html page for inventory management
 	http.HandleFunc("/order", func(w http.ResponseWriter, r *http.Request) {
 		id := r.FormValue("sku")
 		/*		if r.Method == http.MethodPost && id == "" {

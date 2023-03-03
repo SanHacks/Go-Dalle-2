@@ -32,13 +32,13 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 
 func storeImageDB(Image string, Prompt string) int {
 
-   // Set up database connection string
-    // Connect to database
-    db, err := dbPass()
+	// Set up database connection string
+	// Connect to database
+	db, err := dbPass()
 
-    if err != nil {
+	if err != nil {
 		log.Println("Error in Connecting to Database")
-        panic(err.Error())
+		panic(err.Error())
 	} else {
 		log.Println("Connected to Database")
 		//Save Image To Local Database for future use
@@ -56,7 +56,7 @@ func storeImageDB(Image string, Prompt string) int {
 		var id int
 
 		err = db.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
-		
+
 		if err != nil {
 			log.Println("Error in Getting Last Insert ID")
 		} else {
@@ -68,11 +68,11 @@ func storeImageDB(Image string, Prompt string) int {
 
 func dbPass() (*sql.DB, error) {
 	dbUser := "ndiGundoSan"
-	dbPass := "@Sifhufhi2024"
+	dbPassword := "@Sifhufhi2024"
 	dbHost := "aigen.mysql.database.azure.com"
 	dbPort := "3306"
 	dbName := "aigen"
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=false", dbUser, dbPass, dbHost, dbPort, dbName)
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=false", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	db, err := sql.Open("mysql", dbURI)
 	return db, err
