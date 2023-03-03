@@ -24,9 +24,9 @@ func main() {
 	platformRouter(router)
 
 	//TEMPLATES HANDLER
-	platform, inventory, product, order := templates()
+	platform, inventory, product, order, errorPage := templates()
 
-	templateHandler(platform, inventory, product, order)
+	templateHandler(platform, inventory, product, order, errorPage)
 	http.Handle("/", router)
 
 	port := openPort()
@@ -41,7 +41,12 @@ func main() {
 func routeNotFoundError() http.Handler {
 	//Redirect to /platform
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/platform", http.StatusFound)
+		//if is to / then redirect to /platform else redirect if is route not found just go to 404
+		if r.URL.Path == "/" {
+			http.Redirect(w, r, "/platform", http.StatusSeeOther)
+		} else {
+			http.Redirect(w, r, "/404", http.StatusSeeOther)
+		}
 	})
 }
 
@@ -58,9 +63,16 @@ func openPort() string {
 }
 
 // Front End routes
-func templateHandler(platform, inventory, product, order *template.Template) {
+func templateHandler(platform, inventory, product, order, errorPage *template.Template) {
 
-	//Landing Page
+	http.HandleFunc("/404", func(w http.ResponseWriter, r *http.Request) {
+		err := errorPage.Execute(w, nil)
+		if err != nil {
+			log.Println("Error in Rendering the 404 Page")
+		}
+		return
+	})
+	//Handle the Platform Page
 	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
 		//IF THE REQUEST IS NOT A POST
 		if r.Method != http.MethodPost {
@@ -259,4 +271,5 @@ func templateHandler(platform, inventory, product, order *template.Template) {
 		}
 
 	})
+
 }
