@@ -2,3 +2,10 @@
 /.vscode
 /.idea
 /testdb.go
+/.vagrant
+/CONFIG.go
+/.DatabaseHandler.go
+/frontend/.idea
+/frontend/.vscode
+/frontend/node_modules
+/generatedProducts

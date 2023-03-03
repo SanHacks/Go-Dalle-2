@@ -19,362 +19,63 @@
     <!--  <link rel="mask-icon" href="assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">-->
     <!--  <link rel="icon" href="assets/img/favicons/favicon.ico">-->
     <meta name="theme-color" content="#712cf9">
-
-    <link href="/css/dashboard.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <style>
-        body {
-            font-size: .875rem;
-        }
-
-        .feather {
-            width: 16px;
-            height: 16px;
-        }
-
-        /*
-         * Sidebar
-         */
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            /* rtl:raw:
-            right: 0;
-            */
-            bottom: 0;
-            /* rtl:remove */
-            left: 0;
-            z-index: 100; /* Behind the navbar */
-            padding: 48px 0 0; /* Height of navbar */
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-        }
-
-        @media (max-width: 767.98px) {
-            .sidebar {
-                top: 5rem;
-            }
-        }
-
-        .sidebar-sticky {
-            height: calc(100vh - 48px);
-            overflow-x: hidden;
-            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-        }
-
-        .sidebar .nav-link {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .sidebar .nav-link .feather {
-            margin-right: 4px;
-            color: #727272;
-        }
-
-        .sidebar .nav-link.active {
-            color: #2470dc;
-        }
-
-        .sidebar .nav-link:hover .feather,
-        .sidebar .nav-link.active .feather {
-            color: inherit;
-        }
-
-        .sidebar-heading {
-            font-size: .75rem;
-        }
-
-        /*
-         * Navbar
-         */
-
-        .navbar-brand {
-            padding-top: .75rem;
-            padding-bottom: .75rem;
-            background-color: rgba(0, 0, 0, .25);
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-        }
-
-        .navbar .navbar-toggler {
-            top: .25rem;
-            right: 1rem;
-        }
-
-        .navbar .form-control {
-            padding: .75rem 1rem;
-        }
-
-        .form-control-dark {
-            color: #fff;
-            background-color: rgba(255, 255, 255, .1);
-            border-color: rgba(255, 255, 255, .1);
-        }
-
-        .form-control-dark:focus {
-            border-color: transparent;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-        }
-
-        .nav .flex-column .nav-item {
-            color: #fcb606;
-
-        }
-
-        /** Gradient Navbar **/
-
-        .navbar {
-            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
-
-            width:99.99%;
-            border-radius: 0;
-            padding-left: calc(1em + 0.25em);
-            padding-right: calc(1em + 0.25em);
-            margin-bottom: 10px;
-            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
-            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-
-            backdrop-filter: blur(5.4px);
-            -webkit-backdrop-filter: blur(5.4px);
-        }
-        .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-        }
-        .nav-scroller .nav {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-wrap: nowrap;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            color: rgba(255, 255, 255, .75);
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
-        .btn {
-            /** Modern material button **/
-            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
-            border-radius: 50px;
-            border: 10px;
-            color: #ffffff;
-            padding: 0.5em 1em;
-            font-size: 1em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            -webkit-transition: all 0.3s ease;
-            -moz-transition: all 0.3s ease;
-            -o-transition: all 0.3s ease;
-            -ms-transition: all 0.3s ease;
-            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
-            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            backdrop-filter: blur(5.4px);
-            -webkit-backdrop-filter: blur(5.4px);
-        }
-
-        /* Edit cart border radius and outline color    */
-
-        .card {
-            border-radius: 10px;
-            border: 1px solid #000000;
-            border-color: rgba(126, 165, 127, 0.24);
-            border-style: solid;
-            border-width: 2px;
-            border-radius: 10px;
-            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
-            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            backdrop-filter: blur(5.4px);
-            -webkit-backdrop-filter: blur(5.4px);
-        }
-
-        /* Edit Scrollbar to look like nav bar   */
-
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
-            border-radius: 10px;
-            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
-            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            backdrop-filter: blur(5.4px);
-            -webkit-backdrop-filter: blur(5.4px);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg, rgb(30, 5, 91), rgb(148, 116, 36), rgb(148, 116, 36), rgb(21, 7, 60));
-            border-radius: 10px;
-            -webkit-box-shadow: -7px 11px 25px -9px rgb(73, 174, 57);
-            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            backdrop-filter: blur(5.4px);
-            -webkit-backdrop-filter: blur(5.4px);
-        }
-
-        .btn .btn-danger {
-            background: linear-gradient(90deg, rgb(98, 28, 89), rgba(236, 106, 156, 0.2), rgba(47, 30, 107, 0.1), rgba(136, 192, 114, 0.1));
-            border-radius: 50px;
-            border: 10px;
-            color: #843030;
-            padding: 0.5em 1em;
-            font-size: 1em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            -webkit-transition: all 0.3s ease;
-            -moz-transition: all 0.3s ease;
-            -o-transition: all 0.3s ease;
-            -ms-transition: all 0.3s ease;
-            -webkit-box-shadow: -7px 11px 25px -9px rgb(114,57,174);
-            -moz-box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            box-shadow: -7px 11px 25px -9px rgb(66,26,104);
-            backdrop-filter: blur(5.4px);
-            -webkit-backdrop-filter: blur(5.4px);
-        }
-
-        .btn btn-outline-secondary{
-            --bs-btn-color:#6c757d;
-            --bs-btn-border-color:#6c757d;
-            --bs-btn-hover-color:#fff;
-            --bs-btn-hover-bg:#6c757d;
-            --bs-btn-hover-border-color:#6c757d;
-            --bs-btn-focus-shadow-rgb:108,117,125;
-            --bs-btn-active-color:#fff;
-            --bs-btn-active-bg:#6c757d;
-            --bs-btn-active-border-color:#6c757d;
-            --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color:#6c757d;--bs-btn-disabled-bg:transparent;
-            --bs-btn-disabled-border-color:#6c757d;--bs-gradient:none
-        }
-        /** Style all elements with different colors all, used in project **/
-
-        .link-secondary {
-            color: #6c757d;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-primary {
-            color: #0d6efd;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-success {
-            color: #198754;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-info {
-            color: #0dcaf0;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-warning {
-            color: #ffc107;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-danger {
-            color: #dc3545;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-light {
-            color: #f8f9fa;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-dark {
-            color: #212529;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-white {
-            color: #fff;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-black {
-            color: #000;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-body {
-            color: #212529;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-mute {
-            color: #6c757d;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-        .link-white {
-            color: #fff;
-            text-decoration: none;
-            background-color: transparent;
-            -webkit-text-decoration-skip: objects;
-        }
-
-    </style>
+    <link href="assets/css/platform.css" rel="stylesheet">
 </head>
 <body>
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/">Platform</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<header>
+    <div class="collapse bg-dark" id="navbarHeader" style="background-color: #affa64;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4 class="text-white">About</h4>
+                    <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                    <h4 class="text-white">Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Follow on Twitter</a></li>
+                        <li><a href="#" class="text-white">Like on Facebook</a></li>
+                        <li><a href="#" class="text-white">Email me</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-dark  shadow-lg fixed-top" style="background-image:linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">
+        <div class="container">
+            <a href="./" class="navbar-brand d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <strong>AIGEN</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
 </header>
-<div class="container-fluid">
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+<div class="container-fluid" style="padding-top: 5em;">
+    <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 font-italic">Unfortunate Error</h1>
+            <p class="lead my-3">The page you are looking for is not available.</p>
+            <p class="lead mb-0"><a href="/platform" class="text-white fw-bold">Continue to homepage...</a></p>
+        </div>
         <figure class="text-center">
-            <img src="https://images.pexels.com/photos/733998/pexels-photo-733998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" class="img-fluid" alt="404 Error, Page Not Found">
+            <img src="https://images.pexels.com/photos/733998/pexels-photo-733998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" class="img-fluid responsive rounded-top" alt="404 Error, Page Not Found">
             <figcaption class="blockquote-footer">
                 <cite title="AiGen">Oops Page Not Found</cite>
             </figcaption>
-    </main>
+        </figure>
+    </div>
 </div>
 <footer class="text-muted py-5">
     <div class="container">
         <p class="float-end mb-1">
             <a href="/platform">Home</a>
         </p>
-        <p class="mb-1">Gundo &copy;</p></div>
+        <a href="http://gundo.ml" target="_blank"><p class="mb-1">Gundo &copy;</p></a>
+</div>
 </footer>
 </body>
 

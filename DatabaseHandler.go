@@ -1,8 +1,12 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
 	"fmt"
+	"github.com/go-sql-driver/mysql"
+	"io/ioutil"
 	"log"
 )
 
@@ -30,19 +34,16 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 	return orderID
 }
 
+// Store Image in Database Function
+
 func storeImageDB(Image string, Prompt string) int {
 
-	// Set up database connection string
-	// Connect to database
 	db, err := dbPass()
-
 	if err != nil {
 		log.Println("Error in Connecting to Database")
 		panic(err.Error())
 	} else {
 		log.Println("Connected to Database")
-		//Save Image To Local Database for future use
-		/*var imagePaths =*/
 		var localImage = saveImageLocally(Image)
 
 		prepare := "INSERT INTO generatedProducts (name, description, price, image, category, subcategory) VALUES (?, ?, ?, ?, ?, ?)"
@@ -70,10 +71,21 @@ func dbPass() (*sql.DB, error) {
 	dbUser := "ndiGundoSan"
 	dbPassword := "@Sifhufhi2024"
 	dbHost := "aigen.mysql.database.azure.com"
-	dbPort := "3306"
 	dbName := "aigen"
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=false", dbUser, dbPassword, dbHost, dbPort, dbName)
 
-	db, err := sql.Open("mysql", dbURI)
+	rootCertPool := x509.NewCertPool()
+	pem, _ := ioutil.ReadFile(CaCertPath)
+	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
+		log.Fatal("Failed to append PEM.")
+	}
+	mysql.RegisterTLSConfig("custom", &tls.Config{RootCAs: rootCertPool})
+	var connectionString string
+	connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?allowNativePasswords=true&tls=custom", dbUser, dbPassword, dbHost, dbName)
+	//dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=true&tlsca=%s", dbUser, dbPassword, dbHost, dbPort, dbName, CaCertPath)
+
+	db, err := sql.Open("mysql", connectionString)
 	return db, err
 }
+
+//db, err := sql.Open("mysql", "ndiGundoSan:{your_password}@tcp
+//(aigen.mysql.database.azure.com:3306)/{your_database}?tls=custom&tls-ca={ca-cert filename}")

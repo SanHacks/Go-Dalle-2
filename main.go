@@ -20,10 +20,13 @@ func main() {
 	//Initiate Router
 	router := mux.NewRouter()
 
-	//Main Backend Routes
+	//Map the routes to the handlers in the backend api handler and
+	//Handle 404 errors and redirect to /platform
+	//Open Up routes for the frontend engine to use the backend api handler
+	//Such as /backend/api/products (api) and /generatedProducts/ directory
 	platformRouter(router)
 
-	//TEMPLATES HANDLER
+	//Templates allocation to variables for the frontend engine
 	platform, inventory, product, order, errorPage := templates()
 
 	templateHandler(platform, inventory, product, order, errorPage)
@@ -33,7 +36,7 @@ func main() {
 
 	log.Printf("Listening on port %s", port)
 	log.Printf("🚀🚀🚀🚀AIGEN🚀🚀🚀🚀")
-	log.Printf("Open http://localhost:%s/platform in the browser", port)
+	log.Printf("Open http://localhost:%s in the browser", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 
 }

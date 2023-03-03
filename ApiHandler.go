@@ -5,11 +5,14 @@ import (
 	"net/http"
 )
 
+// Map the routes to the handlers in the backend api handler
+// Handle 404 errors and redirect to /platform
 func platformRouter(router *mux.Router) {
-	//Map the routes to the handlers in the backend api handler
-	//Handle 404 errors and redirect to /platform
 	router.NotFoundHandler = routeNotFoundError()
+	//Backend API Routes Definition (API) (ie: open route and map to handler)
 	router.HandleFunc("/backend/api/products", ProductsHandler).Methods("GET")
+
+	//File Server for Platform CDN and Frontend Engine Resources (CSS, JS, Images, Fonts and stuff)
 	router.PathPrefix("/generatedProducts/").Handler(http.StripPrefix("/generatedProducts/", http.FileServer(http.Dir("./generatedProducts/"))))
 	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./frontend/assets/css/"))))
 	router.PathPrefix("/img/").Handler(http.StripPrefix("/img/", http.FileServer(http.Dir("./frontend/assets/img/"))))
