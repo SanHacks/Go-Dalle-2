@@ -174,8 +174,10 @@
            getProducts();
 
            async function getProducts() {
-
-               let myObject = await fetch("http://localhost:8080/backend/api/products", requestOptions);
+                //Detect host and port
+                let host = window.location.hostname;
+                let port = window.location.port;
+               let myObject = await fetch("https://aigen.azurewebsites.net/backend/api/products", requestOptions);
                let myText = await myObject.text();
                let updatedString = myText.replace(/<nil>/g, '');
                var Stuff = JSON.parse(updatedString);
