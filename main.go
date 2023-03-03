@@ -27,18 +27,18 @@ func main() {
 	platform, inventory, product, order := templates()
 
 	templateHandler(platform, inventory, product, order)
-	http.Handle("/.", router)
+	http.Handle("/", router)
 
 	port := openPort()
 
 	log.Printf("Listening on port %s", port)
 	log.Printf("🚀🚀🚀🚀AIGEN🚀🚀🚀🚀")
-	log.Printf("Open http://localhost:%s/ in the browser", port)
+	log.Printf("Open http://localhost:%s/platform in the browser", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 
 }
 
-// Opens Up The Port 8085, although it can get changed by the PORT env variable
+// Opens Up The Port 8080, although it can get changed by the PORT env variable
 func openPort() string {
 
 	port := os.Getenv("PORT")
@@ -54,7 +54,7 @@ func openPort() string {
 func templateHandler(platform, inventory, product, order *template.Template) {
 
 	//Landing Page
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
 		//IF THE REQUEST IS NOT A POST
 		if r.Method != http.MethodPost {
 			//Render the Home Page
