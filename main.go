@@ -38,6 +38,13 @@ func main() {
 
 }
 
+func routeNotFoundError() http.Handler {
+	//Redirect to /platform
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/platform", http.StatusFound)
+	})
+}
+
 // Opens Up The Port 8080, although it can get changed by the PORT env variable
 func openPort() string {
 
