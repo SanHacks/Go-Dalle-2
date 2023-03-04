@@ -27,9 +27,9 @@ func main() {
 	platformRouter(router)
 
 	//Templates allocation to variables for the frontend engine
-	platform, inventory, product, order, errorPage := templates()
+	platform, inventory, product, order, errorPage, orderSuccess := templates()
 
-	templateHandler(platform, inventory, product, order, errorPage)
+	templateHandler(platform, inventory, product, order, errorPage, orderSuccess)
 	http.Handle("/", router)
 
 	port := openPort()
@@ -64,7 +64,7 @@ func openPort() string {
 }
 
 // Front End routes
-func templateHandler(platform, inventory, product, order, errorPage *template.Template) {
+func templateHandler(platform, inventory, product, order, errorPage, orderSuccess *template.Template) {
 
 	http.HandleFunc("/404", func(w http.ResponseWriter, r *http.Request) {
 		err := errorPage.Execute(w, nil)
@@ -268,6 +268,17 @@ func templateHandler(platform, inventory, product, order, errorPage *template.Te
 			}{Success: false, ChannelData: products})
 			return
 		}
+
+	})
+
+	http.HandleFunc("/CompleteOrder", func(w http.ResponseWriter, r *http.Request) {
+		//Get Order ID from URL
+		id := r.URL.Query().Get("id")
+		log.Println("Order ID: ", id)
+		orderSuccess.Execute(w, struct {
+			Success     bool
+			ChannelData any
+		}{Success: true, ChannelData: id})
 
 	})
 

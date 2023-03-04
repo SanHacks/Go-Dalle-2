@@ -229,3 +229,65 @@ CREATE TABLE IF NOT EXISTS   `thirdPartyTokens` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Product
+Test
+Name:
+School
+Email:
+s223480835@mandela.ac.za
+Phone:
+0636754400
+Address Line 1:
+University Way
+Address Line 2:
+Summerstrand
+City:
+Port Elizabeth
+Province:
+Eastern Cape
+Zipcode:
+6019
+Country:
+South Africa
+Payment method:
+Credit card
+*/
+
+CREATE TABLE IF NOT EXISTS  `storeOrderProducts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS  `Orders`(
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) DEFAULT NULL,
+    `status_id` int(11) DEFAULT NULL,
+    `price` decimal(10,2) DEFAULT NULL,
+    `total` decimal(10,2) DEFAULT NULL,
+    `tax` decimal(10,2) DEFAULT NULL,
+    `shipping` decimal(10,2) DEFAULT NULL,
+    `product_id` int(11) DEFAULT NULL,
+    `quantity` int(11) DEFAULT NULL,
+    `sku` varchar(255) DEFAULT NULL,
+    `name` varchar(255) DEFAULT NULL,
+    `email` varchar(255) DEFAULT NULL,
+    `phone` varchar(255) DEFAULT NULL,
+    `address_line_1` varchar(255) DEFAULT NULL,
+    `address_line_2` varchar(255) DEFAULT NULL,
+    `city` varchar(255) DEFAULT NULL,
+    `province` varchar(255) DEFAULT NULL,
+    `zipcode` varchar(255) DEFAULT NULL,
+    `country` varchar(255) DEFAULT NULL,
+    `payment_method` varchar(255) DEFAULT NULL,
+    `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
