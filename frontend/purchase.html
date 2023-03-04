@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="https://aigen.azurewebsites.net/img/icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://aigen.azurewebsites.net/img/icon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://aigen.azurewebsites.net/img/icon.png">
-    <link rel="stylesheet" href="assets/css/platform.css">
+    <link rel="stylesheet" href="assets/platform.css">
 </head>
 <body>
 
@@ -64,7 +64,7 @@
                         <img src="{{.Image}}" class="img-fluid" alt="{{.Name}}">
                     </div>
                     <div class="col-md-8">
-                        <form action="/order" method="post" class="form responsive" id="orderForm" style="background: rgba(255, 255, 255, 0.5); padding: 20px; border-radius: 10px;">
+                        <form action="/checkout" method="post" class="form responsive" id="orderForm" style="background: rgba(255, 255, 255, 0.5); padding: 20px; border-radius: 10px;">
                             <input type="hidden" id="sku" name="sku" value="{{.Id}}">
                             <div class="form-group">
                                 <label for="name">Name:</label>
