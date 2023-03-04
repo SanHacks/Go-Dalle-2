@@ -55,13 +55,11 @@ func routeNotFoundError() http.Handler {
 
 // Opens Up The Port 8080, although it can get changed by the PORT env variable
 func openPort() string {
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 		log.Printf("Enojy! %s", port)
 	}
-
 	return port
 }
 
@@ -75,7 +73,8 @@ func templateHandler(platform, inventory, product, order, errorPage *template.Te
 		}
 		return
 	})
-	//Handle the Platform Page
+
+	//HandleFunc() the Platform Page
 	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
 		//IF THE REQUEST IS NOT A POST
 		if r.Method != http.MethodPost {
@@ -87,18 +86,15 @@ func templateHandler(platform, inventory, product, order, errorPage *template.Te
 			return
 		}
 
-		//Handle the POST Request
 		details := search{
 			Time:    time.Time{},
 			QueryIn: r.FormValue("search"),
 		}
-		// Details Collected From Request
+
 		_ = details
-		//Get Prompt from the Form
+
 		var imageURL = GenerateImage(details.QueryIn)
-		//Log entry of all the search queries
 		log.Println("Prompt typed in: ", details.QueryIn)
-		//display the image on the home page
 		var imageOut GenerateImages
 		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
 		if getJsonValues != nil {
