@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"database/sql"
 	"fmt"
+	"github.com/go-redis/redis/v8"
 	"github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
@@ -17,7 +18,7 @@ func storeOrderDB(sku string, name string, email string, phone string, address1 
 	if fail != nil {
 		panic(fail.Error())
 	}
-	StoreOrder, _ := db.Query("INSERT INTO orders (sku, name, email, phone, address1, address2, city, state, zipcode, country, payment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", sku, name, email, phone, address1, address2, city, state, zipcode, country, payment)
+	StoreOrder, _ := db.Query("INSERT INTO orders (sku, name, email, phone, address_line_1, address_line_2, city, province, zipcode, country, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", sku, name, email, phone, address1, address2, city, state, zipcode, country, payment)
 	if StoreOrder != nil {
 		log.Println("Error in Storing Order in Database")
 	} else {
@@ -73,6 +74,18 @@ func dbPass() (*sql.DB, error) {
 	dbHost := "aigen.mysql.database.azure.com"
 	dbName := "aigen"
 
+	// Connect to Redis
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	pong, err := rdb.Ping(rdb.Context()).Result()
+	fmt.Println(pong, err)
+	// Retrieve data from Redis
+	//cachedData, err := rdb.Get(ctx, "yourkey").Result()
+
 	rootCertPool := x509.NewCertPool()
 	pem, _ := ioutil.ReadFile(CaCertPath)
 	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
@@ -81,11 +94,44 @@ func dbPass() (*sql.DB, error) {
 	mysql.RegisterTLSConfig("custom", &tls.Config{RootCAs: rootCertPool})
 	var connectionString string
 	connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?allowNativePasswords=true&tls=custom", dbUser, dbPassword, dbHost, dbName)
-	//dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?tls=true&tlsca=%s", dbUser, dbPassword, dbHost, dbPort, dbName, CaCertPath)
-
 	db, err := sql.Open("mysql", connectionString)
+
 	return db, err
 }
 
-//db, err := sql.Open("mysql", "ndiGundoSan:{your_password}@tcp
-//(aigen.mysql.database.azure.com:3306)/{your_database}?tls=custom&tls-ca={ca-cert filename}")
+func savePurchase(name string, address string, number string, address2 string, city string, state string, zip string, country string, payment string, sku string) int {
+	db, err := dbPass()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(db)
+	prepare := "INSERT INTO orders (name, product_id, address_line_1, address_line_2, province, city, zipcode, country, payment_method, sku) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	stmt, err := db.Prepare(prepare)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(stmt)
+	_, err = stmt.Exec(name, sku, address, address2, state, city, zip, country, payment, sku)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Get Last Inserted ID
+	var id int
+
+	err = db.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return id
+}

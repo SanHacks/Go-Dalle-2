@@ -61,9 +61,9 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 
 			saveOrder := savePurchase(name, address, phoneNumber, address2, city, state, zip, country, payment, sku)
 
-			if saveOrder == true {
+			if saveOrder != 0 {
 				log.Println("Order Saved")
-				http.Redirect(w, r, "/succesfulOrder", http.StatusSeeOther)
+				http.Redirect(w, r, "/CompleteOrder", http.StatusSeeOther)
 
 			} else {
 

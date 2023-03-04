@@ -271,4 +271,15 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 
 	})
 
+	http.HandleFunc("/CompleteOrder", func(w http.ResponseWriter, r *http.Request) {
+		//Get Order ID from URL
+		id := r.URL.Query().Get("id")
+		log.Println("Order ID: ", id)
+		orderSuccess.Execute(w, struct {
+			Success     bool
+			ChannelData any
+		}{Success: true, ChannelData: id})
+
+	})
+
 }

@@ -59,83 +59,13 @@
             <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue shopping</a></p>
         </div>
         <figure class="text-center">
-            <div id="truck-container">
-                <img id="truck" src="https://cdn.dribbble.com/users/427368/screenshots/11007433/media/bd32b453de5894a2c82b671a2333ecb8.jpg" alt="Truck" style="width: 100px; height: 65px;">
-            </div>
+            <img src="https://i.imgur.com/f2kmsLf.gif" class="img-fluid" alt="Order successful animation">
             <figcaption class="blockquote-footer">
                 <cite title="AiGen">Order successful animation by AiGen</cite>
             </figcaption>
         </figure>
-        <div class="row my-4">
-            <div class="col-md-6">
-                <h3>Personal Information</h3>
-                <p>Name: John Doe</p>
-                <p>Email: johndoe@example.com</p>
-                <p>Phone: 555-555-5555</p>
-            </div>
-            <div class="col-md-6">
-                <h3>Delivery Information</h3>
-                <p>Address: 123 Main St, Anytown USA</p>
-                <p>Shipping Method: Standard</p>
-                <p>Expected Delivery Date: March 15, 2023</p>
-            </div>
-        </div>
     </div>
 </div>
-
-<script>
-    const truck = document.getElementById('truck');
-    const truckContainer = document.getElementById('truck-container');
-    let position = 0;
-
-    function moveTruck() {
-        if (position >= 100) {
-            clearInterval(truckInterval);
-        } else {
-            position++;
-            truck.style.left = position + '%';
-        }
-    }
-
-    const truckInterval = setInterval(moveTruck, 50);
-</script>
-
-<style>
-    #truck {
-        position: relative;
-        left: 0;
-        animation: none;
-    }
-
-    #truck-container {
-        position: relative;
-        height: 150px;
-        overflow: hidden;
-    }
-
-    @keyframes moveTruck {
-        0% {
-            left: -20%;
-        }
-        50% {
-            left: 50%;
-        }
-        100% {
-            left: 120%;
-        }
-    }
-
-    #truck.animate {
-        animation: moveTruck 5s linear forwards;
-    }
-</style>
-
-<script>
-    setTimeout(() => {
-        truck.classList.add('animate');
-    }, 2000);
-</script>
-
 <footer class="text-muted py-5">
     <div class="container">
         <p class="float-end mb-1">
