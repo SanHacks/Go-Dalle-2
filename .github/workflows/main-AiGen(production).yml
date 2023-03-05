@@ -1,4 +1,5 @@
 name: Go Lang CI/CD
+
 on:
   push:
     branches:
@@ -11,8 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Azure Login
-        uses: Azure/login@v1
       - uses: actions/checkout@v2
       - name: Set up Go
         uses: actions/setup-go@v2
