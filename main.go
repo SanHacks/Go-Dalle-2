@@ -229,53 +229,6 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 
 }
 
-//func loginHandler(w http.ResponseWriter, r *http.Request) {
-//	// If the request is not a POST, render the login page
-//	if r.Method != http.MethodPost {
-//		err := loginPlatform.Execute(w, nil)
-//		if err != nil {
-//			log.Println("Error in Rendering the Login Page")
-//		}
-//		return
-//	}
-//
-//	// Get the form values
-//	email := r.FormValue("email")
-//	password := r.FormValue("password")
-//
-//	// Check if the user exists in the database
-//	user, err := getUser(email)
-//	if err != nil {
-//		http.Error(w, "User does not exist", http.StatusForbidden)
-//		return
-//	}
-//
-//	// Check if the password is correct
-//	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
-//	if err != nil {
-//		http.Error(w, "Incorrect password", http.StatusForbidden)
-//		return
-//	}
-//
-//	// Create a new session
-//	session, err := store.Get(r, "session")
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//
-//	// Set the user id in the session
-//	session.Values["id"] = user.ID
-//	err = session.Save(r, w)
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//
-//	// Redirect the user to the home page
-//	http.Redirect(w, r, "/", http.StatusSeeOther)
-//
-//}
 
 func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	// Get the form values
