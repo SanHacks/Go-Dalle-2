@@ -1,5 +1,6 @@
 name: Go Lang CI/CD
-
+        - name: Azure Login
+        uses: Azure/login@v1
 on:
   push:
     branches:
@@ -7,7 +8,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: AiGen # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: /home/site/wwwroot
+  AZURE_WEBAPP_PACKAGE_PATH: /home/site/wwwroot/
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,4 +29,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/bin/app
