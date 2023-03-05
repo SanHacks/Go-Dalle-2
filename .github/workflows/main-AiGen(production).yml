@@ -1,5 +1,4 @@
 name: Go Lang CI/CD
-
 on:
   push:
     branches:
