@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-
 env:
   AZURE_WEBAPP_NAME: AiGen # Set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: /home/site/wwwroot/
@@ -13,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
