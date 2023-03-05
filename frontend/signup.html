@@ -1,0 +1,173 @@
+<!--
+  ~ Copyright (c) 2023.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <!--favicon-->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://aigen.azurewebsites.net/img/icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://aigen.azurewebsites.net/img/icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://aigen.azurewebsites.net/img/icon.png">
+<meta name="theme-color" content="#712cf9">
+    <link href="assets/platform.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <div class="collapse bg-dark" id="navbarHeader" style="background-color: #affa64;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4 class="text-white">About</h4>
+                    <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                    <h4 class="text-white">Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Follow on Twitter</a></li>
+                        <li><a href="#" class="text-white">Like on Facebook</a></li>
+                        <li><a href="#" class="text-white">Email me</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-dark  shadow-lg fixed-top" style="background-image:linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);">
+        <div class="container">
+            <a href="./" class="navbar-brand d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <strong>AIGEN</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+<div class="parallax-container">
+    <div class="parallax-image"></div>
+    <div class="overlay">
+        <div class="container">
+            <form action="/signup" method="post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="text-muted py-5">
+    <div class="container">
+        <p class="float-end mb-1">
+            <a href="/platform">Home</a>
+        </p>
+        <a href="http://gundo.ml" target="_blank"><p class="mb-1">Gundo &copy;</p></a>
+</div>
+</footer>
+</body>
+<script>
+    $(document).ready(function(){
+        $('.parallax-container').parallax();
+    });
+    window.addEventListener('scroll', function() {
+        const parallax = document.querySelector('.parallax-image');
+        let scrollPosition = window.pageYOffset;
+
+        parallax.style.transform = 'translateY(' + scrollPosition * .5 + 'px)';
+    });
+</script>
+<style>
+    .parallax-container {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .parallax-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://img.freepik.com/free-vector/waterfall-forest-cascade-jet-summer-nature_107791-13179.jpg?w=1800&t=st=1678010448~exp=1678011048~hmac=d7f783a5630b19c6bee054a7fba6a0fc5dfeabd9a7347d50051768a3f2c13967');
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+        filter: blur(5px);
+    }
+
+    .overlay {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .container {
+        max-width: 500px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: aliceblue;
+        text-size-adjust: auto;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+    }
+
+    button[type="submit"] {
+        display: block;
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0069d9;
+    }
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+</html>

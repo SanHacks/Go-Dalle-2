@@ -15,7 +15,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
  Sass() {
         echo "${GREEN}Initiating Sass build...${GREEN}"
-        npm install -g sass --prefix ../Frontend
+        npm install -g sass --prefix ./
         if ! sass; then
             echo "${RED}An error occurred while installing Sass.${NC}"
             exit 1
@@ -163,6 +163,15 @@ build() {
   else
       echo "${RED}An error occurred while downloading modules.${NC}"
       echo "${RED}An error occurred while downloading modules.${NC}" >> platform.log
+      exit 1
+  fi
+
+  if go mod vendor; then
+      echo "${GREEN}Platform modules vendored.${NC}"
+      echo "${GREEN}Platform modules vendored.${NC}" >> platform.log
+  else
+      echo "${RED}An error occurred while vendoring modules.${NC}"
+      echo "${RED}An error occurred while vendoring modules.${NC}" >> platform.log
       exit 1
   fi
 

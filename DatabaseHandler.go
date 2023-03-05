@@ -135,3 +135,43 @@ func savePurchase(name string, address string, number string, address2 string, c
 	}
 	return id
 }
+
+
+func saveUser(name string, email string, username string, password interface{}) error {
+	db, err := dbPass()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(db)
+	prepare := "INSERT INTO storecustomers (name, email, username, password) VALUES (?, ?, ?, ?)"
+	stmt, err := db.Prepare(prepare)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(stmt)
+	_, err = stmt.Exec(name, email, username, password)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Get Last Inserted ID
+	var id int
+
+	err = db.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nil
+
+}
+

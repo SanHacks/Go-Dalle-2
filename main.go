@@ -3,23 +3,23 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	_ "go/ast"
 	_ "go/types"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
 func main() {
 
 	//Initiate Router
 	router := mux.NewRouter()
-
+	//router.Use(checkLogin)
 	//Map the routes to the handlers in the backend api handler and
 	//Handle 404 errors and redirect to /platform
 	//Open Up routes for the frontend engine to use the backend api handler
@@ -27,9 +27,9 @@ func main() {
 	platformRouter(router)
 
 	//Templates allocation to variables for the frontend engine
-	platform, inventory, product, order, errorPage, orderSuccess := templates()
+	platform, inventory, product, order, errorPage, orderSuccess,joinPlatform := templates()
 
-	templateHandler(platform, inventory, product, order, errorPage, orderSuccess)
+	templateHandler(platform, inventory, product, order, errorPage, orderSuccess, joinPlatform)
 	http.Handle("/", router)
 
 	port := openPort()
@@ -64,7 +64,7 @@ func openPort() string {
 }
 
 // Front End routes
-func templateHandler(platform, inventory, product, order, errorPage, orderSuccess *template.Template) {
+func templateHandler(platform, inventory, product, order, errorPage, orderSuccess, jointPlatform *template.Template) {
 
 	http.HandleFunc("/404", func(w http.ResponseWriter, r *http.Request) {
 		err := errorPage.Execute(w, nil)
@@ -169,74 +169,6 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 	//Get Product from product id and display in template product.html page for inventory management
 	http.HandleFunc("/order", func(w http.ResponseWriter, r *http.Request) {
 		id := r.FormValue("sku")
-		/*		if r.Method == http.MethodPost && id == "" {
-				//Get Values from the Form and store in the database to create an order
-				//Get Product ID from URL
-				//id := r.URL.Query().Get("id")
-
-				sku := r.FormValue("sku")
-				name := r.FormValue("name")
-				email := r.FormValue("email")
-				phone := r.FormValue("phone")
-				address1 := r.FormValue("address1")
-				//address2 := r.FormValue("address2")
-				city := r.FormValue("city")
-				state := r.FormValue("state")
-				zipcode := r.FormValue("zipcode")
-				country := r.FormValue("country")
-				payment := r.FormValue("payment")
-
-				//Check if all the fields are filled
-				if sku == "" || name == "" || email == "" || phone == "" || address1 == "" || city == "" || state == "" || zipcode == "" || country == "" || payment == "" {
-					log.Println("All fields are required")
-					order.Execute(w, struct {
-						Success     bool
-						ChannelData any
-					}{Success: false, ChannelData: "All fields are required"})
-
-					//Reirect to the order Thank you page
-					http.Redirect(w, r, "/order", http.StatusSeeOther)
-					return
-				}
-
-				if r.Method == http.MethodPost {
-					//Get Values from the Form and store in the database to create an order
-					//Get Product ID from URL
-					id := r.URL.Query().Get("id")
-
-					sku := r.FormValue("sku")
-					name := r.FormValue("name")
-					email := r.FormValue("email")
-					phone := r.FormValue("phone")
-					address1 := r.FormValue("address1")
-					address2 := r.FormValue("address2")
-					city := r.FormValue("city")
-					state := r.FormValue("state")
-					zipcode := r.FormValue("zipcode")
-					country := r.FormValue("country")
-					payment := r.FormValue("payment")
-
-					//Check if all the fields are filled
-					if sku == "" || name == "" || email == "" || phone == "" || address1 == "" || city == "" || state == "" || zipcode == "" || country == "" || payment == "" {
-						log.Println("All fields are required")
-						order.Execute(w, struct {
-							Success     bool
-							ChannelData any
-						}{Success: false, ChannelData: "All fields are required"})
-						return
-					}
-
-					//Store Order in the database
-					var orderID = storeOrderDB(sku, name, email, phone, address1, address2, city, state, zipcode, country, payment)
-					log.Println("Order ID: ", orderID)
-					//Send email to customer
-					sendEmail(name, email, orderID, id)
-					//Reirect to the order Thank you page
-					http.Redirect(w, r, "/CompleteOrder?id="+orderID, http.StatusSeeOther)
-					return
-
-				}
-			}*/
 
 		//If GET Request is made to the order page
 		if r.Method == http.MethodPost {
@@ -270,7 +202,20 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 		}
 
 	})
+	http.HandleFunc("/signup", signUpHandler)
+	//http.HandleFunc("/login", loginHandler)
 
+	http.HandleFunc("/join", func(w http.ResponseWriter, r *http.Request) {
+		//IF THE REQUEST IS NOT A POST
+		if r.Method != http.MethodPost {
+			//Render the Home Page
+			err := jointPlatform.Execute(w, nil)
+			if err != nil {
+				log.Println("Error in Rendering the Join Page")
+			}
+			return
+		}
+	})
 	http.HandleFunc("/CompleteOrder", func(w http.ResponseWriter, r *http.Request) {
 		//Get Order ID from URL
 		id := r.URL.Query().Get("id")
@@ -278,8 +223,84 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 		orderSuccess.Execute(w, struct {
 			Success     bool
 			ChannelData any
-		}{Success: true, ChannelData: id})
+		}{Success: false, ChannelData: id})
 
 	})
 
 }
+
+//func loginHandler(w http.ResponseWriter, r *http.Request) {
+//	// If the request is not a POST, render the login page
+//	if r.Method != http.MethodPost {
+//		err := loginPlatform.Execute(w, nil)
+//		if err != nil {
+//			log.Println("Error in Rendering the Login Page")
+//		}
+//		return
+//	}
+//
+//	// Get the form values
+//	email := r.FormValue("email")
+//	password := r.FormValue("password")
+//
+//	// Check if the user exists in the database
+//	user, err := getUser(email)
+//	if err != nil {
+//		http.Error(w, "User does not exist", http.StatusForbidden)
+//		return
+//	}
+//
+//	// Check if the password is correct
+//	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
+//	if err != nil {
+//		http.Error(w, "Incorrect password", http.StatusForbidden)
+//		return
+//	}
+//
+//	// Create a new session
+//	session, err := store.Get(r, "session")
+//	if err != nil {
+//		http.Error(w, err.Error(), http.StatusInternalServerError)
+//		return
+//	}
+//
+//	// Set the user id in the session
+//	session.Values["id"] = user.ID
+//	err = session.Save(r, w)
+//	if err != nil {
+//		http.Error(w, err.Error(), http.StatusInternalServerError)
+//		return
+//	}
+//
+//	// Redirect the user to the home page
+//	http.Redirect(w, r, "/", http.StatusSeeOther)
+//
+//}
+
+func signUpHandler(w http.ResponseWriter, r *http.Request) {
+	// Get the form values
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+	username := r.FormValue("email")
+	password := r.FormValue("password")
+
+	// Hash the password for security
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	log.Println(hashedPassword)
+	if err != nil {
+		http.Error(w, "Error hashing password", http.StatusInternalServerError)
+		return
+	}
+
+	// Save the user to the database
+	err = saveUser(name, email, username, hashedPassword)
+	if err != nil {
+		http.Error(w, "Error saving user to database", http.StatusInternalServerError)
+		return
+	}
+
+	// Redirect the user to the login page
+	//user credentials are saved to the database to log user in automatically
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
