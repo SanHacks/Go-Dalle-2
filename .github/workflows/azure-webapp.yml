@@ -19,8 +19,6 @@ jobs:
           go-version: 1.19.x
       - name: Install dependencies
         run: go mod download
-      - name: Install Vendor
-        run: go vendor
       - name: Build Go binaries
         run: go build -o ./bin/app
       - name: Building web app
