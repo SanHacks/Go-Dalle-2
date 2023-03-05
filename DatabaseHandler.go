@@ -5,7 +5,6 @@ import (
 	"crypto/x509"
 	"database/sql"
 	"fmt"
-	"github.com/go-redis/redis/v8"
 	"github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
@@ -75,14 +74,14 @@ func dbPass() (*sql.DB, error) {
 	dbName := "aigen"
 
 	// Connect to Redis
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
-
-	pong, err := rdb.Ping(rdb.Context()).Result()
-	fmt.Println(pong, err)
+	//rdb := redis.NewClient(&redis.Options{
+	//	Addr:     "localhost:6379",
+	//	Password: "",
+	//	DB:       0,
+	//})
+	//
+	//pong, err := rdb.Ping(rdb.Context()).Result()
+	//fmt.Println(pong, err)
 	// Retrieve data from Redis
 	//cachedData, err := rdb.Get(ctx, "yourkey").Result()
 
