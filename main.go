@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	_ "go/ast"
 	_ "go/types"
 	"golang.org/x/crypto/bcrypt"
@@ -13,6 +14,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"crypto/rand"
+	"encoding/base64"
 )
 
 func main() {
@@ -229,6 +232,7 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 
 }
 
+var store = sessions.NewCookieStore([]byte("my-secret-key"))
 
 func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	// Get the form values
@@ -252,8 +256,31 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect the user to the login page
-	//user credentials are saved to the database to log user in automatically
+	// Generate a random session token
+	randomBytes := make([]byte, 32)
+	_, err = rand.Read(randomBytes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	sessionToken := "aigen-" + base64.StdEncoding.EncodeToString(randomBytes)
+
+	// Create a new session for the user
+	session, err := store.New(r, "aigenID")
+	//session, err := store.New(r, sessionToken)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	session.Values["sessionToken"] = sessionToken
+
+	// Save the session ID in a cookie
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Redirect the user to the homepage or some other page
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
