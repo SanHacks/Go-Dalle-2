@@ -41,3 +41,10 @@ type GeneratedProducts struct {
 	CreatedAt   string  `json:"created_at"`
 	UpdatedAt   string  `json:"updated_at"`
 }
+
+type Users struct {
+	Id       int
+	Email    string
+	Password string
+}
+
