@@ -8,6 +8,8 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"os"
 	"strings"
 )
 
@@ -91,10 +93,10 @@ func storeImageDB(Image string, Prompt string) int {
 }
 
 func dbPass() (*sql.DB, error) {
-	dbUser := "ndiGundoSan"
-	dbPassword := "Philemon70"
-	dbHost := "aigen.mysql.database.azure.com"
-	dbName := "aigen"
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASS")
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
 
 	rootCertPool := x509.NewCertPool()
 	pem, _ := ioutil.ReadFile(CaCertPath)
@@ -185,3 +187,38 @@ func saveUser(name string, email string, username string, password interface{}) 
 
 }
 
+func getUserFormCookie(r *http.Request) (string, error) {
+	// Get the session token from the cookie
+	session, err := store.Get(r, "aigenID")
+	if err != nil {
+		log.Println("Error getting session:", err)
+	}else {
+		//Get session and compare to database session then return username and user id
+		//Check if the session token is valid
+		db, _ := dbPass()
+		defer db.Close()
+		var token string
+		err := db.QueryRow("SELECT token FROM sessions WHERE username = ?", session.Values["username"]).Scan(&token)
+		if err != nil {
+			log.Println("Error getting comparing session token from database to cookie:", err)
+		}
+		if token == session.Values["username"] {
+			//use the username to get the user id
+			var id int
+			err := db.QueryRow("SELECT id FROM users WHERE username = ?", session.Values["username"]).Scan(&id)
+			if err != nil {
+				return "", err
+			}
+			return string(rune(id)), nil
+		}
+	}
+	return "", err
+}
+
+func logVisitation(_ error, db *sql.DB, osOutput string, osBrowser string) interface{} {
+	_, err := db.Exec("INSERT INTO visitorlogs ( os, browser) VALUES ( ?, ?)", osOutput, osBrowser)
+	if err != nil {
+		log.Println("Error in Inserting Device Information", err)
+	}
+	return err
+}

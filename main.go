@@ -22,7 +22,7 @@ import (
 func main() {
 
 	//
-	setup()
+	//setup()
 	//Initiate Router
 	router := mux.NewRouter()
 
@@ -49,6 +49,7 @@ func main() {
 
 }
 
+
 func isAuthenticated(r *http.Request) bool {
 	// Get the session token from the cookie
 	session, err := store.Get(r, "aigenID")
@@ -56,15 +57,6 @@ func isAuthenticated(r *http.Request) bool {
 		log.Println("Error getting session:", err)
 		return false
 	}
-
-	// Check if the "username" value is set in the session
-	username, ok := session.Values["username"].(string)
-	if !ok {
-		log.Println("Username is not set in the session", username)
-		return false
-	}
-	log.Println("Username:", session.Values["username"])
-	log.Println("Session ID:", session.Values["token"])
 
 	// Check if the session token is valid
 	valid, err := isValidSessionToken(session.Values["username"].(string), session.Values["token"])
@@ -138,9 +130,13 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 		//Log Vistor Device
 		ua := user_agent.New(r.UserAgent())
 		
-		fmt.Println(ua.OS())      // Output: Linux
-		fmt.Println(ua.Browser()) // Output: Chrome
-		
+		var osOutput = ua.OS()    // Output: Linux
+		var osBrowser, _ = ua.Browser() // Output: Chrome
+
+		//Save the device information in the databasego
+		db, newEra := dbPass()
+		err := logVisitation(newEra, db, osOutput, osBrowser)
+
 		if r.Method != http.MethodPost {
 			//Render the Home Page
 			err := platform.Execute(w, nil)
@@ -160,7 +156,7 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 		var imageURL = GenerateImage(details.QueryIn)
 		log.Println("Prompt typed in: ", details.QueryIn)
 		var imageOut GenerateImages
-		
+
 		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
 		if getJsonValues != nil {
 			log.Println("Error in Unmarshalling JSON")
@@ -180,7 +176,7 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 			ImageIDs = append(ImageIDs, ImageID)
 		}
 
-		err := platform.Execute(w, struct {
+		err = platform.Execute(w, struct {
 			Success  bool
 			ImageURL []string
 			Search   string
@@ -311,6 +307,8 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 
 }
 
+
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	//Get the Form Values
 	email := r.FormValue("email")
@@ -380,15 +378,16 @@ func logoutHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func authCheckIn(w http.ResponseWriter, r *http.Request) {
-	sessionError := isAuthenticated(r)
-	log.Println("Session Error: ", sessionError)
-	if sessionError != true {
-		log.Println("Error in Authenticating Session")
+	sessionProgress := isAuthenticated(r)
+	log.Println("Session Success: ", sessionProgress)
+	if sessionProgress != true {
+		log.Println("Success: ", sessionProgress)
 	} else {
 		log.Println("Authenticated Session")
 		//Redirect to the Home Page
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
+	
 }
 
 var store = sessions.NewCookieStore([]byte("aigenID"))

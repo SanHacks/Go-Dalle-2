@@ -10,7 +10,6 @@ import (
 	"strings"
 )
 func GenerateImage(PromptIn string) string {
-	//setup()// sets up the environment variables
 	url := "https://api.openai.com/v1/images/generations"
 	method := "POST"
 
