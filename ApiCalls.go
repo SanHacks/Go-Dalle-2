@@ -16,12 +16,12 @@ func GenerateImage(PromptIn string) string {
 
 	//Fine Tune
 	if PromptIn == "" {
-		PromptIn = "T-Shirt realistic"
+		PromptIn = "T-Shirt Real 3D"
 	} else {
 		if strings.Contains(PromptIn, "T-Shirt") || strings.Contains(PromptIn, "t-shirt") || strings.Contains(PromptIn, "shirt") || strings.Contains(PromptIn, "Shirt") {
-			PromptIn = PromptIn + " realistic"
+			PromptIn = PromptIn + " Real 3D"
 		} else {
-			PromptIn = PromptIn + " T-Shirt realistic"
+			PromptIn = PromptIn + " T-Shirt Real 3D"
 		}
 		log.Println("Prompt Sent: ", PromptIn)
 

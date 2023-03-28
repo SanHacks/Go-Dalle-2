@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+	"github.com/mssola/user_agent"
 	_ "go/ast"
 	_ "go/types"
 	"golang.org/x/crypto/bcrypt"
@@ -21,7 +22,7 @@ import (
 func main() {
 
 	//
-	//setup()
+	setup()
 	//Initiate Router
 	router := mux.NewRouter()
 
@@ -134,6 +135,12 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 	//HandleFunc() the Platform Page
 	http.HandleFunc("/platform", func(w http.ResponseWriter, r *http.Request) {
 		//IF THE REQUEST IS NOT A POST
+		//Log Vistor Device
+		ua := user_agent.New(r.UserAgent())
+		
+		fmt.Println(ua.OS())      // Output: Linux
+		fmt.Println(ua.Browser()) // Output: Chrome
+		
 		if r.Method != http.MethodPost {
 			//Render the Home Page
 			err := platform.Execute(w, nil)
