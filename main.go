@@ -20,6 +20,8 @@ import (
 
 func main() {
 
+	//
+	//setup()
 	//Initiate Router
 	router := mux.NewRouter()
 

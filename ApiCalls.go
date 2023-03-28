@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
-
 func GenerateImage(PromptIn string) string {
-
+	//setup()// sets up the environment variables
 	url := "https://api.openai.com/v1/images/generations"
 	method := "POST"
 
@@ -39,6 +39,7 @@ func GenerateImage(PromptIn string) string {
 			return ""
 		}
 		req.Header.Add("Content-Type", "application/json")
+		OpenAIkey := os.Getenv("OPENAIKEY")
 		req.Header.Add("Authorization", "Bearer "+OpenAIkey)
 
 		res, err := client.Do(req)

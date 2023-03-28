@@ -8,6 +8,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 // Store Order in Database Function
@@ -68,10 +69,10 @@ func storeImageDB(Image string, Prompt string) int {
 }
 
 func dbPass() (*sql.DB, error) {
-	dbUser := "ndiGundoSan"
-	dbPassword := "@Sifhufhi2024"
-	dbHost := "aigen.mysql.database.azure.com"
-	dbName := "aigen"
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASS")
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
 
 	// Connect to Redis
 	//rdb := redis.NewClient(&redis.Options{
