@@ -214,11 +214,65 @@ func getUserFormCookie(r *http.Request) (string, error) {
 	}
 	return "", err
 }
-
 func logVisitation(_ error, db *sql.DB, osOutput string, osBrowser string) interface{} {
 	_, err := db.Exec("INSERT INTO visitorlogs ( os, browser) VALUES ( ?, ?)", osOutput, osBrowser)
 	if err != nil {
-		log.Println("Error in Inserting Device Information", err)
+		log.Println("Error in Inserting Device Information")
 	}
 	return err
+}
+
+
+func saveDevice(output string, browser string) {
+	db, err := dbPass()
+	if err != nil {
+		log.Println("Error in Connecting to Database")
+	}
+
+	//Insert the Device into the Database
+	_, err = db.Query("INSERT INTO visitorlogs (device, browser)VALUES (?, ?)", output, browser)
+	if err != nil {
+		log.Println("Error in Inserting Device Information", err)
+	}
+}
+
+
+func isValidSessionToken(username string, id interface{}) (bool, error) {
+	// Get the session token from the database
+	db, fail := dbPass()
+	if fail != nil {
+		return false, fail
+	}
+	defer db.Close()
+	var token string
+	err := db.QueryRow("SELECT token FROM sessions WHERE username = ?", username).Scan(&token)
+	if err != nil {
+		return false, err
+	}
+
+	// Check if the session token matches the one in the database
+	if token == id {
+		return true, nil
+	}
+
+	return false, nil
+
+}
+
+
+func saveSessionToken(username string, token string, userID int) error {
+
+	// Open the database
+	db, err := dbPass()
+	if err != nil {
+		return err
+	}
+
+	// Save the session token to the database
+	_, err = db.Exec("INSERT INTO sessions (username, token,userID) VALUES (?, ?,?)", username, token, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

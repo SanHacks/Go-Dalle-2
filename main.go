@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	_ "database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -22,7 +23,7 @@ import (
 func main() {
 
 	//
-	//setup()
+	setup()
 	//Initiate Router
 	router := mux.NewRouter()
 
@@ -53,6 +54,7 @@ func main() {
 func isAuthenticated(r *http.Request) bool {
 	// Get the session token from the cookie
 	session, err := store.Get(r, "aigenID")
+	//log.Println("Session:", session)
 	if err != nil {
 		log.Println("Error getting session:", err)
 		return false
@@ -68,27 +70,6 @@ func isAuthenticated(r *http.Request) bool {
 	return valid
 }
 
-func isValidSessionToken(username string, id interface{}) (bool, error) {
-	// Get the session token from the database
-	db, fail := dbPass()
-	if fail != nil {
-		return false, fail
-	}
-	defer db.Close()
-	var token string
-	err := db.QueryRow("SELECT token FROM sessions WHERE username = ?", username).Scan(&token)
-	if err != nil {
-		return false, err
-	}
-
-	// Check if the session token matches the one in the database
-	if token == id {
-		return true, nil
-	}
-
-	return false, nil
-
-}
 
 
 func routeNotFoundError() http.Handler {
@@ -130,12 +111,19 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 		//Log Vistor Device
 		ua := user_agent.New(r.UserAgent())
 		
-		var osOutput = ua.OS()    // Output: Linux
-		var osBrowser, _ = ua.Browser() // Output: Chrome
+		osOutput:= ua.OS()    // Output: Linux
+		osBrowser, _ := ua.Browser() // Output: Chrome
+		log.Println("OS: ", osOutput)
+		log.Println("Browser: ", osBrowser)
+		//Save the device information in the database
+		saveDevice(osOutput, osBrowser)
 
 		//Save the device information in the databasego
-		db, newEra := dbPass()
-		err := logVisitation(newEra, db, osOutput, osBrowser)
+		// db ,_ := dbPass()
+		//_, err := db.Exec("INSERT INTO visitorlogs ( os, browser) VALUES ( ?, ?)", osOutput, osBrowser)
+		//if err != nil {
+		//	log.Println("Error in Inserting Device Information")
+		//}
 
 		if r.Method != http.MethodPost {
 			//Render the Home Page
@@ -176,7 +164,7 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 			ImageIDs = append(ImageIDs, ImageID)
 		}
 
-		err = platform.Execute(w, struct {
+		err := platform.Execute(w, struct {
 			Success  bool
 			ImageURL []string
 			Search   string
@@ -307,8 +295,6 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 
 }
 
-
-
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	//Get the Form Values
 	email := r.FormValue("email")
@@ -433,13 +419,28 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	token := "aigen-" + base64.URLEncoding.EncodeToString(tokenBytes)
 
+
+	var userID int
+	db ,_:= dbPass()
+	userData, err := db.Query("SELECT id FROM storecustomers WHERE email = ? LIMIT 1", email)
+	if err != nil {
+		log.Println("Error in Using the Database, User Does Not Exist With the Email: ", email)
+	} else {
+		defer userData.Close()
+		if userData.Next() {
+			err := userData.Scan(&userID)
+			if err != nil {
+				log.Println("Error in Scanning User Data")
+			}
+		}
+	}
+
 	// Save the session token to the database
-	err = saveSessionToken(username, token)
+	err = saveSessionToken(username, token, userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	// Create a new session for the user
 	session, err := store.New(r, "aigenID")
 	if err != nil {
@@ -459,20 +460,4 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/join", http.StatusSeeOther)
 }
 
-func saveSessionToken(username string, token string) error {
-
-	// Open the database
-	db, err := dbPass()
-	if err != nil {
-		return err
-	}
-
-	// Save the session token to the database
-	_, err = db.Exec("INSERT INTO sessions (username, token) VALUES (?, ?)", username, token)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
