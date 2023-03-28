@@ -8,7 +8,6 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
-	"os"
 )
 
 // Store Order in Database Function
