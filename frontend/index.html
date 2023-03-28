@@ -178,47 +178,56 @@
                 {{end}}
             </div>
         </div>
-    </div>    
+    </div>
 
-   <div class="album py-5 bg-light">
-       <div class="container" class="text-center">
-           <p id="demo"><span class="loader">
-           </span>
-           </p>
-   </div>
-       <script>
+    <div class="album py-5 bg-light">
+        <div class="container" class="text-center">
+            <p id="demo"><span class="loader"></span></p>
+        </div>
+        <script>
+            var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+            };
+            getProducts();
 
-           var requestOptions = {
-               method: 'GET',
-               redirect: 'follow'
-           };
-           getProducts();
-
-           async function getProducts() {
+            async function getProducts() {
                 //Detect host and port
                 let host = window.location.hostname;
                 let port = window.location.port;
-               let myObject = await fetch("https://aigen.azurewebsites.net/backend/api/products", requestOptions);
-               let myText = await myObject.text();
-               let updatedString = myText.replace(/<nil>/g, '');
-               var Stuff = JSON.parse(updatedString);
+                let myObject = await fetch("https://aigen.azurewebsites.net/backend/api/products", requestOptions);
+                let myText = await myObject.text();
+                let updatedString = myText.replace(/<nil>/g, '');
+                var Stuff = JSON.parse(updatedString);
 
-               var loops = "";
-               for (var i = 0; i < Stuff.length; i++) {
-                   loops += "<div class='col'><div class='card shadow-lg'>" +
-                       "<div class='card-body'><h5 class='card-title'>" + Stuff[i].name + "</h5>" +
-                       "<p class='card-text'>" + Stuff[i].description + "</p>" +
-                       "<p class='card-text'>" + Stuff[i].price + "</p>" +
-                       "<img src='" + Stuff[i].image + "' class='card-img-top' alt='...'>" +
-                       "<a href='/product?id=" + Stuff[i].id + "'>" +
-                       "<button type='button' class='btn btn-lg btn-outline-success' style='background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);'>Purchase</button></a></div></div></div>";
+                var loops = `
+                <div class="row">
+                    ${Stuff.map(product =>
+                    `<div class='col-md-4 mb-4'>
+                            <div class='card shadow-lg'>
+                                <img src='${product.image}' class='card-img-top' alt='...'>
+                                <div class='card-body'>
+                                    <h5 class='card-title'>${product.name}</h5>
+                                    <p class='card-text'>${product.description}</p>
+                                    <p class='card-text'>${product.price}</p>
+                                    <a href='/product?id=${product.id}'>
+                                        <button type='button' class='btn btn-lg btn-outline-success' style='background-image: linear-gradient(90deg, #4c9470 0%, #affa64 100%, rgba(44,249,78,0.41) 100%);'>
+                                            Purchase
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>`
+                ).join('')}
+                </div>
+            `;
 
-               }
-               document.getElementById("demo").innerHTML = loops;
+                document.getElementById("demo").innerHTML = loops;
 
-           }
-       </script><!---->
-</div>
+            }
+        </script>
+    </div>
+
 
 </main>
 
