@@ -69,10 +69,10 @@ func storeImageDB(Image string, Prompt string) int {
 }
 
 func dbPass() (*sql.DB, error) {
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASS")
-	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
+	dbUser := "ndiGundoSan"
+	dbPassword := "Philemon70"
+	dbHost := "aigen.mysql.database.azure.com"
+	dbName := "aigen"
 
 	// Connect to Redis
 	//rdb := redis.NewClient(&redis.Options{
