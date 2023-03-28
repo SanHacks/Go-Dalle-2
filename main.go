@@ -160,6 +160,7 @@ func templateHandler(platform, inventory, product, order, errorPage, orderSucces
 		var imageURL = GenerateImage(details.QueryIn)
 		log.Println("Prompt typed in: ", details.QueryIn)
 		var imageOut GenerateImages
+		
 		getJsonValues := json.Unmarshal([]byte(imageURL), &imageOut)
 		if getJsonValues != nil {
 			log.Println("Error in Unmarshalling JSON")

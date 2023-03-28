@@ -291,3 +291,19 @@ CREATE TABLE IF NOT EXISTS  `Orders`(
     `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `visitorlogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+    `city` varchar(255) DEFAULT NULL,
+    `client` varchar(255) DEFAULT NULL,
+    `os` varchar(255) DEFAULT NULL,
+    `browser` varchar(255) DEFAULT NULL,
+    `device` varchar(255) DEFAULT NULL,
+    `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

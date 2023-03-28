@@ -8,6 +8,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
+	"strings"
 )
 
 // Store Order in Database Function
@@ -45,9 +46,31 @@ func storeImageDB(Image string, Prompt string) int {
 	} else {
 		log.Println("Connected to Database")
 		var localImage = saveImageLocally(Image)
+		//If words in prompt are less than 3, use the first 3 words as the product name
+		var productName = Prompt
+		if len(strings.Split(Prompt, " ")) < 3 {
+			Prompt = strings.Join(strings.Split(Prompt, " ")[:3], " ")
+		}
+
+		//Determine price by number of words in prompt (1 word = $5, 2 words = $10, 3 words = $15, 4 words = $20, 5 words = $25)
+		var price float64
+		var wordCount = len(strings.Split(Prompt, " "))
+		if wordCount <= 5 {
+			price = 42.69
+		} else if wordCount == 7 {
+			price = 69.42
+		} else if wordCount == 10 {
+			price = 159.69
+		} else if wordCount == 15 {
+			price = 169.42
+		} else if wordCount == 20 {
+			price = 249.69
+		} else {
+			price = 99.42
+		}
 
 		prepare := "INSERT INTO generatedProducts (name, description, price, image, category, subcategory) VALUES (?, ?, ?, ?, ?, ?)"
-		_, err := db.Exec(prepare, "Test", Prompt, 0.00, localImage, "Design", "Shirts")
+		_, err := db.Exec(prepare, productName, Prompt, price, localImage, "Design", "Shirts")
 		if err != nil {
 			log.Println("Error in Storing Image in Database")
 		} else {
@@ -72,18 +95,6 @@ func dbPass() (*sql.DB, error) {
 	dbPassword := "Philemon70"
 	dbHost := "aigen.mysql.database.azure.com"
 	dbName := "aigen"
-
-	// Connect to Redis
-	//rdb := redis.NewClient(&redis.Options{
-	//	Addr:     "localhost:6379",
-	//	Password: "",
-	//	DB:       0,
-	//})
-	//
-	//pong, err := rdb.Ping(rdb.Context()).Result()
-	//fmt.Println(pong, err)
-	// Retrieve data from Redis
-	//cachedData, err := rdb.Get(ctx, "yourkey").Result()
 
 	rootCertPool := x509.NewCertPool()
 	pem, _ := ioutil.ReadFile(CaCertPath)
