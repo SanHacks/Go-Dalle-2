@@ -49,7 +49,7 @@ func storeImageDB(Image string, Prompt string) int {
 		//If words in prompt are less than 3, use the first 3 words as the product name
 		var productName = Prompt
 		if len(strings.Split(Prompt, " ")) < 3 {
-			Prompt = strings.Join(strings.Split(Prompt, " ")[:3], " ")
+			//Prompt = strings.Join(strings.Split(Prompt, " ")[:3], " ")
 		}
 
 		//Determine price by number of words in prompt (1 word = $5, 2 words = $10, 3 words = $15, 4 words = $20, 5 words = $25)
